@@ -96,5 +96,5 @@ for filename in os.listdir('./cogs'):
 
 # Runs the web server to keep the bot alive, takes token and starts running the bot.
 keep_alive()
-token = os.environ.get("DISCORD_BOT_SECRET")
-client.run(token)
+# token = os.environ.get("DISCORD_BOT_SECRET")  # legacy repl.it code
+client.run('NTUzNjY0ODYzOTgxOTI4NDQ4.D2RZeg.H-QhJfJGGXLpb2PaihPsMD4HW5U')
