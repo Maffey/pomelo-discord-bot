@@ -8,6 +8,10 @@ import logging
 from discord.ext import commands, tasks
 from itertools import cycle
 from keep_alive import keep_alive
+from boto.s3.connection import S3Connection  # heroku-related
+
+token = S3Connection(os.environ['DISCORD_BOT_SECRET'])
+
 
 DEFAULT_PREFIX = '.'
 logging.basicConfig(level=logging.WARNING)
@@ -96,5 +100,4 @@ for filename in os.listdir('./cogs'):
 
 # Runs the web server to keep the bot alive, takes token and starts running the bot.
 keep_alive()
-# token = os.environ.get("DISCORD_BOT_SECRET")  # legacy repl.it code
-client.run('INSERT TOKEN HERE')
+client.run(token)
