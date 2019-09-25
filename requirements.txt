@@ -2,3 +2,4 @@ git+git://github.com/Rapptz/discord.py
 discord.py
 flask
 discord
+boto
