@@ -8,9 +8,12 @@ import logging
 from discord.ext import commands, tasks
 from itertools import cycle
 from keep_alive import keep_alive
-from boto.s3.connection import S3Connection  # heroku-related
 
-token = S3Connection(os.environ['DISCORD_BOT_SECRET'])
+# Get discord token from local file
+with open('/home/ec2-user/env.txt', 'r') as env_file:
+    DISCORD_BOT_TOKEN = env_file.read()
+
+
 
 
 DEFAULT_PREFIX = '.'
@@ -100,4 +103,4 @@ for filename in os.listdir('./cogs'):
 
 # Runs the web server to keep the bot alive, takes token and starts running the bot.
 keep_alive()
-client.run(token)
+client.run(DISCORD_BOT_TOKEN)
