@@ -34,7 +34,7 @@ class Utils(commands.Cog):
 
     
     @commands.command(aliases=['showmemedata'])
-    async def show_meme_data(self, ctx, keyword):
+    async def show_meme_data(self, ctx, *, keyword):
         with shelve.open('/home/ubuntu/PomeloDiscordBot/data/memes_shelf') as memes_shelf:
             meme_content = memes_shelf[keyword]
             await ctx.send(str(meme_content))
