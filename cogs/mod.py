@@ -15,12 +15,12 @@ class Mod(commands.Cog):
     @commands.command(aliases=['changeprefix'])
     @commands.has_permissions(administrator=True)
     async def change_prefix(self, ctx, new_prefix):
-        with open('data/prefixes.json', 'r') as json_file:
+        with open('/home/ubuntu/PomeloDiscordBot/data/prefixes.json', 'r') as json_file:
             prefixes = json.load(json_file)
 
         prefixes[str(ctx.guild.id)] = new_prefix
 
-        with open('data/prefixes.json', 'w') as json_file:
+        with open('/home/ubuntu/PomeloDiscordBot/data/prefixes.json', 'w') as json_file:
             json.dump(prefixes, json_file, indent=4)
         
         await ctx.send(f'Prefix has been changed to "{new_prefix}"')
@@ -89,7 +89,7 @@ class Mod(commands.Cog):
     @commands.command(aliases=['addmeme'], description='Adds the given meme to the meme database.')
     async def add_meme(self, ctx, hyperlink, *, keyword):
         # Place the meme in the shelf object. Overwriting existing meme is possible. Optionally, add defensive strategy later.
-        with shelve.open('data/memes_shelf') as memes_shelf:
+        with shelve.open('/home/ubuntu/PomeloDiscordBot/data/memes_shelf') as memes_shelf:
             memes_shelf[keyword] = {'hyperlink' : hyperlink, 'description' : 'new meme', 'frequency' : 0}
             await ctx.send('The meme has been added.')
 
@@ -98,7 +98,7 @@ class Mod(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def del_meme(self, ctx, *, keyword):
         # Remove the meme from shelf object.
-        with shelve.open('data/memes_shelf') as memes_shelf:
+        with shelve.open('/home/ubuntu/PomeloDiscordBot/data/memes_shelf') as memes_shelf:
             del memes_shelf[keyword]
             await ctx.send('The meme has been removed.')
 
@@ -111,7 +111,7 @@ class Mod(commands.Cog):
         keyword = keyword.replace('-', ' ')
         keyword = keyword.replace('_', ' ')
 
-        with shelve.open('data/memes_shelf') as memes_shelf:
+        with shelve.open('/home/ubuntu/PomeloDiscordBot/data/memes_shelf') as memes_shelf:
             # figure out how to add help here
             try:
                 # Open up the meme.
