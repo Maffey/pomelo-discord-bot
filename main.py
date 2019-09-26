@@ -27,7 +27,7 @@ client = commands.Bot(command_prefix=get_prefix)  # Sets the bot to treat a dot 
 
 statuses = cycle(
     ('Powered by AWS!', 'Fresh, ripe and juicy!', 'Don\'t trust Pancake!',
-     'Completely insect-free!', 'My creator is insane!', 'Don\'t use Repl.it!'))
+     'Completely insect-free!', 'Don\'t use Repl.it!'))
 
 
 
