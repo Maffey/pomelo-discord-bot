@@ -7,10 +7,9 @@ import logging
 
 from discord.ext import commands, tasks
 from itertools import cycle
-from keep_alive import keep_alive
 
 # Get discord token from local file
-with open('/home/ec2-user/env.txt', 'r') as env_file:
+with open('data/env.txt', 'r') as env_file:
     DISCORD_BOT_TOKEN = env_file.read()
 
 
@@ -100,7 +99,4 @@ for filename in os.listdir('./cogs'):
     if filename.endswith('py'):
         client.load_extension(f'cogs.{filename[:-3]}')
 
-
-# Runs the web server to keep the bot alive, takes token and starts running the bot.
-keep_alive()
 client.run(DISCORD_BOT_TOKEN)
