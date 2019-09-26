@@ -8,7 +8,7 @@ from discord.ext import commands, tasks
 from itertools import cycle
 
 # Get discord token from local file
-with open('data/token.json', 'r') as token_file:
+with open('/home/ubuntu/PomeloDiscordBot/data/token.json', 'r') as token_file:
     token = json.load(token_file)
     DISCORD_BOT_TOKEN = token["discord-token"]
 
@@ -18,7 +18,7 @@ with open('data/token.json', 'r') as token_file:
 DEFAULT_PREFIX = '.'
 
 def get_prefix(client, message):
-    with open('data/prefixes.json', 'r') as json_file:
+    with open('/home/ubuntu/PomeloDiscordBot/data/prefixes.json', 'r') as json_file:
         prefixes = json.load(json_file)
 
     return prefixes[str(message.guild.id)]
@@ -43,23 +43,23 @@ async def on_ready():
 
 @client.event
 async def on_guild_join(guild):
-    with open('data/prefixes.json', 'r') as json_file:
+    with open('/home/ubuntu/PomeloDiscordBot/data/prefixes.json', 'r') as json_file:
         prefixes = json.load(json_file)
 
     prefixes[str(guild.id)] = DEFAULT_PREFIX
 
-    with open('data/prefixes.json', 'w') as json_file:
+    with open('/home/ubuntu/PomeloDiscordBot/data/prefixes.json', 'w') as json_file:
         json.dump(prefixes, json_file, indent=4)
 
 
 @client.event
 async def on_guild_remove(guild):
-    with open('data/prefixes.json', 'r') as json_file:
+    with open('/home/ubuntu/PomeloDiscordBot/data/prefixes.json', 'r') as json_file:
         prefixes = json.load(json_file)
 
     prefixes.pop(str(guild.id))
 
-    with open('data/prefixes.json', 'w') as json_file:
+    with open('/home/ubuntu/PomeloDiscordBot/data/prefixes.json', 'w') as json_file:
         json.dump(prefixes, json_file, indent=4)
 
 
