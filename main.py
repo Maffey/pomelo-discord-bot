@@ -95,7 +95,7 @@ async def change_status():
 
 
 # Checks "cogs" folder for cog files (duh) and then loads them.
-for filename in os.listdir('./cogs'):
+for filename in os.listdir('/home/ubuntu/PomeloDiscordBot/cogs'):
     if filename.endswith('py'):
         client.load_extension(f'cogs.{filename[:-3]}')
 
