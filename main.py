@@ -26,7 +26,8 @@ def get_prefix(client, message):
 client = commands.Bot(command_prefix=get_prefix)  # Sets the bot to treat a dot (.) as a call for command.
 
 statuses = cycle(
-    ('Powered by AWS!', 'Fresh, ripe and juicy!', 'Don\'t trust Pancake!', 'Completely insect-free!', 'My creator is insane!', 'Repl.it is bad!'))
+    ('Powered by AWS!', 'Fresh, ripe and juicy!', 'Don\'t trust Pancake!',
+     'Completely insect-free!', 'My creator is insane!', 'Don\'t use Repl.it!'))
 
 
 
