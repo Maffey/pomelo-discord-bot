@@ -55,7 +55,7 @@ class Fun(commands.Cog):
                 await ctx.send(meme)
             return
 
-        with shelve.open('data/memes_shelf') as memes_shelf:
+        with shelve.open('/home/ubuntu/PomeloDiscordBot/data/memes_shelf') as memes_shelf:
 
             try:
                 # Sends link to a meme which is saved inside the shelf.
@@ -94,7 +94,7 @@ class Fun(commands.Cog):
 
 def display_meme_help():
     memes_list = []
-    with shelve.open('data/memes_shelf') as memes_shelf:
+    with shelve.open('/home/ubuntu/PomeloDiscordBot/data/memes_shelf') as memes_shelf:
         meme_keys = list(memes_shelf.keys())
         for key in meme_keys:
             description = memes_shelf[key]['description']
