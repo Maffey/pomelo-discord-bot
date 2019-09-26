@@ -3,7 +3,6 @@
 import os
 import discord
 import json
-import logging
 
 from discord.ext import commands, tasks
 from itertools import cycle
@@ -16,7 +15,6 @@ with open('data/env.txt', 'r') as env_file:
 
 
 DEFAULT_PREFIX = '.'
-logging.basicConfig(level=logging.WARNING)
 
 def get_prefix(client, message):
     with open('data/prefixes.json', 'r') as json_file:
