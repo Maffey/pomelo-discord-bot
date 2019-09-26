@@ -8,8 +8,9 @@ from discord.ext import commands, tasks
 from itertools import cycle
 
 # Get discord token from local file
-with open('data/env.txt', 'r') as env_file:
-    DISCORD_BOT_TOKEN = env_file.read()
+with open('data/token.json', 'r') as token_file:
+    token = json.load(json_file)
+    DISCORD_BOT_TOKEN = token["discord-token"]
 
 
 
