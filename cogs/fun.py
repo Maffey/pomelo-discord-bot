@@ -1,5 +1,6 @@
 import random
 import shelve
+
 from discord.ext import commands
 
 
@@ -7,7 +8,6 @@ class Fun(commands.Cog):
 
     def __init__(self, client):
         self.client = client
-
 
     CHAR_LIMIT_MSG = 2000
 
@@ -65,28 +65,26 @@ class Fun(commands.Cog):
 
             # Stores the frequency of usage.
             new_freq = memes_shelf[keyword]['frequency'] + 1
-            memes_shelf[keyword] = {'hyperlink': memes_shelf[keyword]['hyperlink'], 'description': memes_shelf[keyword]['description'], 'frequency': new_freq}
-
-
+            memes_shelf[keyword] = {'hyperlink': memes_shelf[keyword]['hyperlink'],
+                                    'description': memes_shelf[keyword]['description'], 'frequency': new_freq}
 
     @commands.command(aliases=['mammamia', 'mamma-mia'], description='Japierdole, Karolina!')
     async def mamma_mia(self, ctx):
         karolina_sounds = ('https://vocaroo.com/i/s1ky8bx7G2iR', 'https://vocaroo.com/i/s0dPvj6JAh8b',
-                          'https://vocaroo.com/i/s19RlC11goAh')
+                           'https://vocaroo.com/i/s19RlC11goAh')
         await ctx.send(f'https://i.imgflip.com/noa52.jpg\n{random.choice(karolina_sounds)}')
-
 
     @commands.command(aliases=['stopmati', 'stop-mati'], description='Nie no mati kurwa nie swiruj')
     async def stop_mati(self, ctx):
-    	await ctx.send('https://i.postimg.cc/nr7rkLPJ/stop-mati.jpg')
-
+        await ctx.send('https://i.postimg.cc/nr7rkLPJ/stop-mati.jpg')
 
     @commands.command(aliases=['hentai'], description='Find Rule 34 of whatever you want!')
     async def rule34(self, ctx, *, query):
         responses = ['https://media.giphy.com/media/l4Ki2obCyAQS5WhFe/giphy.gif',
-        'Listen here you little shit...',
-        'https://i.postimg.cc/TPYVrKnW/why-you-gay.jpg', 'https://i.postimg.cc/5yVWQNVr/lawsuit.jpg']
+                     'Listen here you little shit...',
+                     'https://i.postimg.cc/TPYVrKnW/why-you-gay.jpg', 'https://i.postimg.cc/5yVWQNVr/lawsuit.jpg']
         await ctx.send(random.choice(responses))
+
     @commands.command(aliases=['..'])
     async def dot(self, ctx):
         await ctx.send('Why you trippin\' bruh?')

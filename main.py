@@ -1,21 +1,19 @@
 # IMPORTS
 
-import os
-import discord
 import json
-
-from discord.ext import commands, tasks
+import os
 from itertools import cycle
+
+import discord
+from discord.ext import commands, tasks
 
 # Get discord token from local file
 with open('/home/ubuntu/PomeloDiscordBot/data/token.json', 'r') as token_file:
     token = json.load(token_file)
     DISCORD_BOT_TOKEN = token["discord-token"]
 
-
-
-
 DEFAULT_PREFIX = '.'
+
 
 def get_prefix(client, message):
     with open('/home/ubuntu/PomeloDiscordBot/data/prefixes.json', 'r') as json_file:
@@ -23,12 +21,12 @@ def get_prefix(client, message):
 
     return prefixes[str(message.guild.id)]
 
+
 client = commands.Bot(command_prefix=get_prefix)  # Sets the bot to treat a dot (.) as a call for command.
 
 statuses = cycle(
     ('Powered by AWS!', 'Fresh, ripe and juicy!', 'Don\'t trust Pancake!',
      'Completely insect-free!', 'Don\'t use Repl.it!'))
-
 
 
 # EVENT LISTENERS
@@ -79,9 +77,12 @@ async def on_member_remove(member):
 @client.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send('You\'re okey there pal? Because you\'ve clearly missed some of the arguments in your command... ***shakes head***')
+        await ctx.send(
+            'You\'re okey there pal? Because you\'ve clearly missed some of the arguments in your command... '
+            '***shakes head***')
     elif isinstance(error, commands.CommandNotFound):
-        await ctx.send('Are you delusional? Such command doesn\'t exist AT ALL. Type "help" if you are a little *stale*.')
+        await ctx.send(
+            'Are you delusional? Such command doesn\'t exist AT ALL. Type "help" if you are a little *stale*.')
     elif isinstance(error, commands.MissingPermissions):
         await ctx.send('You do not have permissions to use such command.')
 
