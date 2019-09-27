@@ -44,6 +44,12 @@ class Utils(commands.Cog):
             meme_content = memes_shelf[keyword]
             await ctx.send(str(meme_content))
 
+    @commands.command(aliases=['plotmemes'])
+    async def plot_memes(self, ctx):
+        await ctx.send('There should be a plotly graph displayed. But I\'m lazy. Give me a break.')
+
+
+
 
 def setup(client):
     client.add_cog(Utils(client))
