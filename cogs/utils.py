@@ -38,8 +38,8 @@ class Utils(commands.Cog):
         todo_file = open('/home/ubuntu/PomeloDiscordBot/data/todo_list.txt', 'r')
         await ctx.send(todo_file.read())
 
-    @commands.command(aliases=['showmemedata'])
-    async def show_meme_data(self, ctx, *, keyword):
+    @commands.command(aliases=['memedata'])
+    async def meme_data(self, ctx, *, keyword):
         with shelve.open('/home/ubuntu/PomeloDiscordBot/data/memes_shelf') as memes_shelf:
             meme_content = memes_shelf[keyword]
             await ctx.send(str(meme_content))
