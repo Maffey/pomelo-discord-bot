@@ -49,7 +49,5 @@ class Utils(commands.Cog):
         await ctx.send('There should be a plotly graph displayed. But I\'m lazy. Give me a break.')
 
 
-
-
 def setup(client):
     client.add_cog(Utils(client))
