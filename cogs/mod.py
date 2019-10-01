@@ -82,7 +82,7 @@ class Mod(commands.Cog):
         # Place the meme in the shelf object. Overwriting existing meme is possible. Optionally, add defensive
         # strategy later.
         with shelve.open('/home/ubuntu/PomeloDiscordBot/data/memes_shelf') as memes_shelf:
-            memes_shelf[keyword] = {'hyperlink': hyperlink, 'description': 'new meme', 'frequency': 0}
+            memes_shelf[keyword] = {'hyperlink': hyperlink, 'description': '**new meme**', 'frequency': 0}
             await ctx.send('The meme has been added.')
 
     @commands.command(aliases=['delmeme'], description='Removes the meme from the meme database.')
