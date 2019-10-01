@@ -1,2 +1,12 @@
-# PomeloDiscordBot
-Discord bot made for private purposes, imported from Repl.it. It was a test to get the bot working on Heroku. Currently outdated.
+# Pomelo - Discord Bot
+## Overview
+This Discord bot was originally made for private purposes (basically, sending memes)
+and was briefly imported from Repl.it, when it proved insufficient and unreliable.
+The bot grew exponentially and became a group project for a class at *WWSIS Horyzont*.
+## Technologies
+- AWS *(distribution)*
+- **discord.py**
+- shelve
+- plotly
+- json
+
