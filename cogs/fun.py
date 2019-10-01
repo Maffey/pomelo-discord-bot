@@ -9,7 +9,6 @@ class Fun(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    CHAR_LIMIT_MSG = 2000
 
     '''
     Chooses a random response from the ones below to respond to user's question.
@@ -51,8 +50,20 @@ class Fun(commands.Cog):
         keyword = keyword.lower()
         if keyword == 'help':
             help_content = display_meme_help()
+
+            msg_limit = 2000  # Max message length on Discord.
+            buffer = ''
             for meme in help_content:
-                await ctx.send(meme)
+
+                # When the buffer overloads (i.e. exceeds 2 000 character limit),
+                # dump the contents of the buffer into the message.
+                if len(buffer + meme + '\n') >= msg_limit:
+                    await ctx.send(buffer)
+                    buffer = ''
+
+                buffer = buffer + meme + '\n'
+
+            await ctx.send(buffer)
             return
 
         with shelve.open('/home/ubuntu/PomeloDiscordBot/data/memes_shelf') as memes_shelf:
