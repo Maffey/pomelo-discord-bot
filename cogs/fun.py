@@ -63,7 +63,7 @@ class Fun(commands.Cog):
 
                 buffer = buffer + meme + '\n'
 
-            await ctx.send(buffer)
+            await ctx.send('```' + buffer + '```')
             return
 
         with shelve.open('/home/ubuntu/PomeloDiscordBot/data/memes_shelf') as memes_shelf:
