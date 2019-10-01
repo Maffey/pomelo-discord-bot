@@ -62,6 +62,8 @@ class Fun(commands.Cog):
                     buffer = '```'
 
                 buffer = buffer + meme + '\n'
+            if buffer != '```':
+                await ctx.send(buffer + '```')
 
             await ctx.send(buffer)
             return
