@@ -52,18 +52,16 @@ class Fun(commands.Cog):
             help_content = display_meme_help()
 
             msg_limit = 2000  # Max message length on Discord.
-            buffer = '```'
+            buffer = ''
             for meme in help_content:
 
                 # When the buffer overloads (i.e. exceeds 2 000 character limit),
                 # dump the contents of the buffer into the message.
-                if len(buffer + meme + '\n```') >= msg_limit:
-                    await ctx.send(buffer + '```')
-                    buffer = '```'
+                if len('```' + buffer + meme + '\n```') >= msg_limit:
+                    await ctx.send('```' + buffer + '```')
+                    buffer = ''
 
                 buffer = buffer + meme + '\n'
-            if buffer != '```':
-                await ctx.send(buffer + '```')
 
             await ctx.send(buffer)
             return
