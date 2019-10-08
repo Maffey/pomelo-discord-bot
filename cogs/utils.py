@@ -46,7 +46,7 @@ class Utils(commands.Cog):
                                '\nHere is its content: ' + todoes[line_index])
                 del todoes[line_index]
             with open('/home/ubuntu/PomeloDiscordBot/data/todo_list.txt', 'w') as todo_file:
-                await ctx.send('DEBUG: Writing todo_file:' + todoes)
+                await ctx.send('DEBUG: Writing todo_file:' + '\n'.join(todoes))
                 todo_file.writelines(todoes)
             await ctx.send('The TODO has been deleted.')
 
