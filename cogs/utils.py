@@ -42,7 +42,6 @@ class Utils(commands.Cog):
         if line_index.isdigit():
             with open('/home/ubuntu/PomeloDiscordBot/data/todo_list.txt', 'r') as todo_file:
                 todo_list = todo_file.readlines()
-                await ctx.send('DEBUG: ' + '\n'.join(todo_list))
                 await ctx.send('DEBUG: Deleting line no. ' + line_index +
                                '\nHere is its content: ' + todo_list[line_index])
                 del todo_list[line_index]
