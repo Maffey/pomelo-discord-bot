@@ -22,21 +22,32 @@ class Utils(commands.Cog):
                                   'want to contribute to it? That "one additional thing we have to do" which you will '
                                   'NEVER do? Think twice before adding anything, please.')
     @commands.has_permissions(administrator=True)
-    async def add_todo(self, ctx, *, todo_content):
-        # Adds a line to todo_list.txt in following format:
-        # <todo content> - <date>
-        todo_file = open('/home/ubuntu/PomeloDiscordBot/data/todo_list.txt', 'a')
-        todo_string = '# TODO: ' + todo_content + ' - ' + str(datetime.now().strftime('%Y-%m-%d %H:%M')) + '\n'
-        todo_file.write(todo_string)
-        await ctx.send('The TODO has been added.')
-        todo_file.close()
+    async def add_todo(self, ctx, *, keyword, todo_content):
+        with open('/home/ubuntu/PomeloDiscordBot/data/todo_list.txt', 'a') as todo_file:
+            todo_string = '# TODO: ' + todo_content + ' - ' + str(datetime.now().strftime('%Y-%m-%d %H:%M')) + '\n'
+            todo_file.write(todo_string)
+
+            await ctx.send('The TODO has been added.')
 
     @commands.command(aliases=['todolist'],
                       description='Shows the TODO list. I mean, if we have the list already might as well take a look '
                                   'at it...')
     async def todo_list(self, ctx):
-        todo_file = open('/home/ubuntu/PomeloDiscordBot/data/todo_list.txt', 'r')
-        await ctx.send(todo_file.read())
+        with open('/home/ubuntu/PomeloDiscordBot/data/todo_list.txt', 'r') as todo_file:
+            await ctx.send(todo_file.read())
+
+    @commands.command(aliases=['deltodo'])
+    @commands.has_permissions(administrator=True)
+    async def del_todo(self, ctx, line_index):
+        if line_index.isdigit():
+            with open('/home/ubuntu/PomeloDiscordBot/data/todo_list.txt', 'r') as todo_file:
+                todo_list = todo_file.readlines()
+                del todo_list[line_index]
+            with open('/home/ubuntu/PomeloDiscordBot/data/todo_list.txt', 'w') as todo_file:
+                todo_file.writelines(todo_list)
+        else:
+            await ctx.send('That\'s not a line number, mate!')
+
 
     @commands.command(aliases=['memedata'])
     async def meme_data(self, ctx, *, keyword):
