@@ -1,11 +1,14 @@
 # IMPORTS
 
 import json
+import logging
 import os
 from itertools import cycle
 
 import discord
 from discord.ext import commands, tasks
+
+logging.basicConfig(level=logging.INFO, filename='bot_logs.txt', format='%(name)s - %(levelname)s - %(message)s')
 
 # Get discord token from local file
 with open('/home/ubuntu/PomeloDiscordBot/data/token.json', 'r') as token_file:

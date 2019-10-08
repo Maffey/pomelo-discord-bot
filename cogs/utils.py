@@ -22,7 +22,7 @@ class Utils(commands.Cog):
                                   'want to contribute to it? That "one additional thing we have to do" which you will '
                                   'NEVER do? Think twice before adding anything, please.')
     @commands.has_permissions(administrator=True)
-    async def add_todo(self, ctx, *, keyword, todo_content):
+    async def add_todo(self, ctx, *, todo_content):
         with open('/home/ubuntu/PomeloDiscordBot/data/todo_list.txt', 'a') as todo_file:
             todo_string = '# TODO: ' + todo_content + ' - ' + str(datetime.now().strftime('%Y-%m-%d %H:%M')) + '\n'
             todo_file.write(todo_string)
