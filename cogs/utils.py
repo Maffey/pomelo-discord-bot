@@ -41,13 +41,13 @@ class Utils(commands.Cog):
     async def del_todo(self, ctx, line_index):
         if line_index.isdigit():
             with open('/home/ubuntu/PomeloDiscordBot/data/todo_list.txt', 'r') as todo_file:
-                todo_list = todo_file.readlines()
+                todoes = todo_file.readlines()
                 await ctx.send('DEBUG: Deleting line no. ' + line_index +
-                               '\nHere is its content: ' + todo_list[line_index])
-                del todo_list[line_index]
+                               '\nHere is its content: ' + todoes[line_index])
+                del todoes[line_index]
             with open('/home/ubuntu/PomeloDiscordBot/data/todo_list.txt', 'w') as todo_file:
-                await ctx.send('DEBUG: Writing todo_file:' + todo_file)
-                todo_file.writelines(todo_list)
+                await ctx.send('DEBUG: Writing todo_file:' + todoes)
+                todo_file.writelines(todoes)
             await ctx.send('The TODO has been deleted.')
 
         else:
