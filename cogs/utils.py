@@ -39,10 +39,10 @@ class Utils(commands.Cog):
     @commands.command(aliases=['deltodo'])
     @commands.has_permissions(administrator=True)
     async def del_todo(self, ctx, line_index):
-        if line_index.isdigit():
+        if line_index >= 0:
             with open('/home/ubuntu/PomeloDiscordBot/data/todo_list.txt', 'r') as todo_file:
                 todoes = todo_file.readlines()
-                await ctx.send('DEBUG: Deleting line no. ' + line_index +
+                await ctx.send('DEBUG: Deleting line no. ' + str(line_index) +
                                '\nHere is its content: ' + todoes[line_index])
                 del todoes[line_index]
             with open('/home/ubuntu/PomeloDiscordBot/data/todo_list.txt', 'w') as todo_file:
@@ -51,7 +51,7 @@ class Utils(commands.Cog):
             await ctx.send('The TODO has been deleted.')
 
         else:
-            await ctx.send('That\'s not a line number, mate!')
+            await ctx.send('That\'s not a correct line number, mate!')
 
     @commands.command(aliases=['memedata'])
     async def meme_data(self, ctx, *, keyword):
