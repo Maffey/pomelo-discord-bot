@@ -15,7 +15,6 @@ with open('/home/ubuntu/PomeloDiscordBot/data/token.json', 'r') as token_file:
 DEFAULT_PREFIX = '.'
 
 
-# TODO: Remove client from this?
 def get_prefix(client, message):
     with open('/home/ubuntu/PomeloDiscordBot/data/prefixes.json', 'r') as json_file:
         prefixes = json.load(json_file)
