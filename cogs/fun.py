@@ -3,6 +3,8 @@ import shelve
 
 from discord.ext import commands
 
+MSG_CHAR_LIMIT = 2000  # Max message length on Discord.
+
 
 class Fun(commands.Cog):
 
@@ -47,17 +49,17 @@ class Fun(commands.Cog):
     @commands.command(description='Send a desired meme to the chat.')
     async def meme(self, ctx, *, keyword):
 
+        # TODO: Add bufer to a function in another, helper file (together with max_msg_length) and use it from there.
         keyword = keyword.lower()
         if keyword == 'help':
             help_content = display_meme_help()
 
-            msg_limit = 2000  # Max message length on Discord.
             buffer = ''
             for meme in help_content:
 
                 # When the buffer overloads (i.e. exceeds 2 000 character limit),
                 # dump the contents of the buffer into the message.
-                if len('```' + buffer + meme + '\n```') >= msg_limit:
+                if len('```' + buffer + meme + '\n```') >= MSG_CHAR_LIMIT:
                     await ctx.send('```' + buffer + '```')
                     buffer = ''
 
