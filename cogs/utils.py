@@ -61,7 +61,7 @@ class Utils(commands.Cog):
             with open('data/todo_list.txt', 'r') as todo_file:
                 todoes = todo_file.readlines()
                 await ctx.send('Deleting line # ' + str(line_index) +
-                               '\nHere\'s its content:\n```' + todoes[line_index]) + '```'
+                               '\nHere\'s its content:\n```' + todoes[line_index] + '```')
                 del todoes[line_index]
             with open('data/todo_list.txt', 'w') as todo_file:
                 todo_file.writelines(todoes)
