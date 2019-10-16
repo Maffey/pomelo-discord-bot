@@ -1,17 +1,19 @@
 # IMPORTS
 
 import json
-import logging
 import os
+import sys
+import traceback
 from itertools import cycle
 
 import discord
 from discord.ext import commands, tasks
 
-logging.basicConfig(level=logging.INFO, filename='bot_logs.txt', format='%(name)s - %(levelname)s - %(message)s')
+# Use the code snippet below when not debugging.
+# logging.basicConfig(level=logging.INFO, filename='data/bot_logs.txt', format='%(name)s - %(levelname)s - %(message)s')
 
 # Get discord token from local file
-with open('/home/ubuntu/PomeloDiscordBot/data/token.json', 'r') as token_file:
+with open('data/token.json', 'r') as token_file:
     token = json.load(token_file)
     DISCORD_BOT_TOKEN = token["discord-token"]
 
@@ -19,7 +21,7 @@ DEFAULT_PREFIX = '.'
 
 
 def get_prefix(client, message):
-    with open('/home/ubuntu/PomeloDiscordBot/data/prefixes.json', 'r') as json_file:
+    with open('data/prefixes.json', 'r') as json_file:
         prefixes = json.load(json_file)
 
     return prefixes[str(message.guild.id)]
@@ -44,23 +46,23 @@ async def on_ready():
 
 @client.event
 async def on_guild_join(guild):
-    with open('/home/ubuntu/PomeloDiscordBot/data/prefixes.json', 'r') as json_file:
+    with open('data/prefixes.json', 'r') as json_file:
         prefixes = json.load(json_file)
 
     prefixes[str(guild.id)] = DEFAULT_PREFIX
 
-    with open('/home/ubuntu/PomeloDiscordBot/data/prefixes.json', 'w') as json_file:
+    with open('data/prefixes.json', 'w') as json_file:
         json.dump(prefixes, json_file, indent=4)
 
 
 @client.event
 async def on_guild_remove(guild):
-    with open('/home/ubuntu/PomeloDiscordBot/data/prefixes.json', 'r') as json_file:
+    with open('data/prefixes.json', 'r') as json_file:
         prefixes = json.load(json_file)
 
     prefixes.pop(str(guild.id))
 
-    with open('/home/ubuntu/PomeloDiscordBot/data/prefixes.json', 'w') as json_file:
+    with open('data/prefixes.json', 'w') as json_file:
         json.dump(prefixes, json_file, indent=4)
 
 
@@ -89,6 +91,10 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.MissingPermissions):
         await ctx.send('You do not have permissions to use such command.')
 
+    # All other Errors not returned come here... And we can just print the default TraceBack.
+    print(f'Ignoring exception in command {ctx.command}:', file=sys.stderr)
+    traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+
 
 # LOOPS
 
@@ -99,7 +105,7 @@ async def change_status():
 
 
 # Checks "cogs" folder for cog files (duh) and then loads them.
-for filename in os.listdir('/home/ubuntu/PomeloDiscordBot/cogs'):
+for filename in os.listdir('cogs'):
     if filename.endswith('py'):
         client.load_extension(f'cogs.{filename[:-3]}')
 
