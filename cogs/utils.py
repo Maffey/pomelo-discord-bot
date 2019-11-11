@@ -1,5 +1,4 @@
 import shelve
-import plotly.graph_objects as go
 import random as rand
 import os
 import zipfile
@@ -115,9 +114,9 @@ class Utils(commands.Cog):
                   'six', 'seven', 'eight', 'nine', 'ten']
         y_axis = rand.sample(range(50), 10)
 
-        fig = go.Figure([go.Bar(x=x_axis, y=y_axis)])
-        fig.update_layout(barmode='group', xaxis_tickangle=-45)
-        fig.show()
+        # fig = go.Figure([go.Bar(x=x_axis, y=y_axis)])
+        # fig.update_layout(barmode='group', xaxis_tickangle=-45)
+        # fig.show()
         # fig.write_image('data/meme_plot.jpeg')
 
         # await ctx.send(file=open('data/meme_plot.jpeg'))
