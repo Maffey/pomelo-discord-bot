@@ -1,6 +1,10 @@
 import shelve
-from datetime import datetime
+import plotly.graph_objects as go
+import plotly.offline
+import random as rand
+import psutil
 
+from datetime import datetime
 from discord.ext import commands
 
 MSG_CHAR_LIMIT = 2000  # Max message length on Discord.
@@ -78,7 +82,17 @@ class Utils(commands.Cog):
 
     @commands.command(aliases=['plotmemes'])
     async def plot_memes(self, ctx):
-        await ctx.send('There should be a plotly graph displayed. But I\'m lazy. Give me a break.')
+        # TODO: Work on it
+        x_axis = ['one', 'two', 'three', 'four', 'five',
+                  'six', 'seven', 'eight', 'nine', 'ten']
+        y_axis = rand.sample(range(50), 10)
+
+        fig = go.Figure([go.Bar(x=x_axis, y=y_axis)])
+        fig.update_layout(barmode='group', xaxis_tickangle=-45)
+        fig.show()
+        # fig.write_image('data/meme_plot.jpeg')
+
+        # await ctx.send(file=open('data/meme_plot.jpeg'))
 
 
 def setup(client):
