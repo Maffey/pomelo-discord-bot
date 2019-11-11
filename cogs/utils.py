@@ -1,13 +1,41 @@
 import shelve
 import plotly.graph_objects as go
-import plotly.offline
 import random as rand
-import psutil
+import os
+import zipfile
 
 from datetime import datetime
 from discord.ext import commands
 
 MSG_CHAR_LIMIT = 2000  # Max message length on Discord.
+
+
+def backup_to_zip():
+    # Backup the entire contents of "data" folder into a ZIP file.
+    folder = 'data'
+
+    folder = os.path.abspath(folder)  # make sure folder is absolute
+
+    # Figure out the filename this code should use based on what files already exist.
+    zip_filename = os.path.basename(folder) + '_backup.zip'
+
+    # Create the ZIP file.
+    print(f'Creating {zip_filename}')
+    backup_zip = zipfile.ZipFile(zip_filename, 'w')
+
+    # Walk the entire folder tree and compress the files in each folder.
+    for foldername, subfolders, filenames in os.walk(folder):
+        print(f'Adding files in {foldername} to backup...')
+        # Add the current folder to the ZIP file.
+        backup_zip.write(foldername)
+        # Add all the files in this folder to the ZIP file.
+        for filename in filenames:
+            if filename == zip_filename:  # Can change it so for example,it only backs up .py files.
+                continue  # don't backup the backup ZIP files
+
+            backup_zip.write(os.path.join(foldername, filename))
+    backup_zip.close()
+    print('The backup has been completed.')
 
 
 class Utils(commands.Cog):
@@ -93,6 +121,11 @@ class Utils(commands.Cog):
         # fig.write_image('data/meme_plot.jpeg')
 
         # await ctx.send(file=open('data/meme_plot.jpeg'))
+
+    @commands.command()
+    async def backup(self, ctx):
+        backup_to_zip()
+        await ctx.send('The backup has been completed.')
 
 
 def setup(client):
