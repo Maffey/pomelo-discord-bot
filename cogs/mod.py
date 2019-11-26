@@ -90,8 +90,11 @@ class Mod(commands.Cog):
     async def del_meme(self, ctx, *, keyword):
         # Remove the meme from shelf object.
         with shelve.open('data/memes_shelf') as memes_shelf:
-            del memes_shelf[keyword]
-            await ctx.send('The meme has been removed.')
+            if keyword in memes_shelf:
+                del memes_shelf[keyword]
+                await ctx.send('The meme has been removed.')
+            else:
+                await ctx.send('There is no such meme, what u doin\'?')
 
     @commands.command(aliases=['changedes'])
     @commands.has_permissions(administrator=True)
