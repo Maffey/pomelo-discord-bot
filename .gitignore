@@ -105,3 +105,10 @@ venv.bak/
 
 # Bot storage files
 data/
+
+# Backup of storage files
+data_backup.zip
+
+# Temp plotly file
+temp-plot.html
+

@@ -9,4 +9,4 @@ The bot grew exponentially and became a group project for a class at *WWSIS Hory
 - shelve
 - plotly
 - json
-
+- zipfile
