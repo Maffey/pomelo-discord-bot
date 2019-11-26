@@ -109,17 +109,7 @@ class Utils(commands.Cog):
 
     @commands.command(aliases=['plotmemes'])
     async def plot_memes(self, ctx):
-        # TODO: Work on it
-        x_axis = ['one', 'two', 'three', 'four', 'five',
-                  'six', 'seven', 'eight', 'nine', 'ten']
-        y_axis = rand.sample(range(50), 10)
-
-        # fig = go.Figure([go.Bar(x=x_axis, y=y_axis)])
-        # fig.update_layout(barmode='group', xaxis_tickangle=-45)
-        # fig.show()
-        # fig.write_image('data/meme_plot.jpeg')
-
-        # await ctx.send(file=open('data/meme_plot.jpeg'))
+        await ctx.send("Matplotlib here, later. Give me some time.")
 
     @commands.command()
     async def backup(self, ctx):
