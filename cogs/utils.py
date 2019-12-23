@@ -1,9 +1,10 @@
-import shelve
 import os
+import shelve
 import zipfile
-import matplotlib
-
 from datetime import datetime
+
+import discord.file
+import matplotlib.pyplot as plt
 from discord.ext import commands
 
 MSG_CHAR_LIMIT = 2000  # Max message length on Discord.
@@ -107,9 +108,34 @@ class Utils(commands.Cog):
             meme_content = memes_shelf[keyword]
             await ctx.send(str(meme_content))
 
-    @commands.command(aliases=['plotmemes'])
-    async def plot_memes(self, ctx):
-        await ctx.send("Matplotlib here, later. Give me some time.")
+    # TODO: finish this
+    @commands.command(aliases=['plotmemes', 'pltm'])
+    async def plot_memes(self, ctx, limit=0):
+
+        # Get all necessary meme data
+        memes = []
+        with shelve.open('data/memes_shelf') as memes_shelf:
+            meme_keys = list(memes_shelf.keys())
+            for key in meme_keys:
+                frequency = memes_shelf[key]['frequency']
+                if frequency > limit:
+                    memes.append((key, frequency))
+
+        # Sort the memes by frequency and capture their names and values into lists
+        memes = sorted(memes, key=lambda meme: meme[1], reverse=True)
+        meme_names = [meme[0] for meme in memes]
+        meme_frequencies = [meme[1] for meme in memes]
+
+        # Plot it
+
+        plt.bar(meme_names, meme_frequencies)
+        plt.title('Usage of memes')
+        plt.xticks(rotation=90)
+        plt.xlabel('Meme names')
+        plt.ylabel('Times used')
+        plt.savefig('data/memes_chart.png', bbox_inches='tight')
+        plt.close()
+        await ctx.send('Here\'s your graph. Enjoy!', file=discord.File('data/memes_chart.png'))
 
     @commands.command()
     async def backup(self, ctx):
