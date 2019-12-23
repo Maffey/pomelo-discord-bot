@@ -108,8 +108,7 @@ class Utils(commands.Cog):
             meme_content = memes_shelf[keyword]
             await ctx.send(str(meme_content))
 
-    # TODO: finish this
-    @commands.command(aliases=['plotmemes', 'pltm'])
+    @commands.command(aliases=['plotmemes', 'pltm'], description='Plot frequency of memes and sends it as file.')
     async def plot_memes(self, ctx, limit=0):
 
         # Get all necessary meme data
