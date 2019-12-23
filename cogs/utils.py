@@ -1,7 +1,7 @@
 import shelve
-import random as rand
 import os
 import zipfile
+import matplotlib
 
 from datetime import datetime
 from discord.ext import commands

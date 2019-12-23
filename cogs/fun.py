@@ -49,7 +49,7 @@ class Fun(commands.Cog):
     @commands.command(description='Send a desired meme to the chat. Type "help" to get a list of all memes.')
     async def meme(self, ctx, *, keyword):
 
-        # TODO: Add bufer to a function in another, helper file (together with max_msg_length) and use it from there.
+        # TODO: Add buffer to a function in another, helper file (together with max_msg_length) and use it from there.
         keyword = keyword.lower()
         if keyword == 'help':
             help_content = display_meme_help()

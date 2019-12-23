@@ -87,7 +87,7 @@ async def on_command_error(ctx, error):
             '***shakes head***')
     elif isinstance(error, commands.CommandNotFound):
         await ctx.send(
-            'Are you delusional? Such command doesn\'t exist AT ALL. Type "help" if you are a little *stale*.')
+            'Are you delusional? Such command doesn\'t exist AT ALL. Type "help" if you are feeling little *stale*.')
     elif isinstance(error, commands.MissingPermissions):
         await ctx.send('You do not have permissions to use such command.')
 
