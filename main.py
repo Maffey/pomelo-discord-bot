@@ -20,8 +20,6 @@ with open('data/token.json', 'r') as token_file:
 DEFAULT_PREFIX = '.'
 
 
-# TODO: Store paths to files in variables. Possibly some strings too.
-
 def get_prefix(client, message):
     with open('data/prefixes.json', 'r') as json_file:
         prefixes = json.load(json_file)

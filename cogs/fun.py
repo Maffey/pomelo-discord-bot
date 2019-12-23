@@ -46,7 +46,7 @@ class Fun(commands.Cog):
     Sends the meme an user wants to be sent by pasting a hyperlink from PostImage library.
     '''
 
-    @commands.command(description='Send a desired meme to the chat.')
+    @commands.command(description='Send a desired meme to the chat. Type "help" to get a list of all memes.')
     async def meme(self, ctx, *, keyword):
 
         # TODO: Add bufer to a function in another, helper file (together with max_msg_length) and use it from there.
@@ -90,13 +90,6 @@ class Fun(commands.Cog):
     @commands.command(aliases=['stopmati', 'stop-mati'], description='Nie no mati kurwa nie swiruj')
     async def stop_mati(self, ctx):
         await ctx.send('https://i.postimg.cc/nr7rkLPJ/stop-mati.jpg')
-
-    @commands.command(aliases=['hentai'], description='Find Rule 34 of whatever you want!')
-    async def rule34(self, ctx, *, query):
-        responses = ['https://media.giphy.com/media/l4Ki2obCyAQS5WhFe/giphy.gif',
-                     'Listen here you little shit...',
-                     'https://i.postimg.cc/TPYVrKnW/why-you-gay.jpg', 'https://i.postimg.cc/5yVWQNVr/lawsuit.jpg']
-        await ctx.send(random.choice(responses))
 
     @commands.command(aliases=['..'])
     async def dot(self, ctx):
