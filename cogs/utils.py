@@ -117,7 +117,7 @@ class Utils(commands.Cog):
             meme_keys = list(memes_shelf.keys())
             for key in meme_keys:
                 frequency = memes_shelf[key]['frequency']
-                if frequency > limit:
+                if frequency > limit and key != 'ruchansko':
                     memes.append((key, frequency))
 
         # Sort the memes by frequency and capture their names and values into lists
