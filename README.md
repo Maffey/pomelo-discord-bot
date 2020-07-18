@@ -24,7 +24,7 @@ Enter the folder with the *PomeloDiscordBot* and enter following command:
 To stop pomelo enter `ps -aux` (shows active processes) then `kill [process_number]`
 
 Crontab allows us to automate some tasks, in this case daily.
-Enter `crontab -e to` see what processes run at what schedule.
+Enter `crontab -e` to see what processes run at what schedule.
 Here, add the command above and `sudo reboot` to allow for a machine restart every day.
 
 To update pomelo enter the folder \PomeloDiscordBot and run `git pull`.
