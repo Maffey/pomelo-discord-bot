@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from discord.ext import commands
 
 from main import MSG_CHAR_LIMIT
+from main import send_with_buffer
 
 
 def backup_to_zip():
@@ -70,18 +71,7 @@ class Utils(commands.Cog):
                                   "at it...")
     async def todo_list(self, ctx):
         with open("data/todo_list.txt", "r") as todo_file:
-            buffer = ""
-            for line in todo_file.readlines():
-
-                # When the buffer overloads (i.e. exceeds 2 000 character limit),
-                # dump the contents of the buffer into the message.
-                if len("```" + buffer + line + "\n```") >= MSG_CHAR_LIMIT:
-                    await ctx.send("```" + buffer + "```")
-                    buffer = ""
-
-                buffer = buffer + line + "\n"
-
-            await ctx.send("```" + buffer + "```")
+            await send_with_buffer(ctx, todo_file.readlines())
 
     @commands.command(aliases=["deltodo"],
                       brief="Removes a TODO entry",
@@ -92,7 +82,7 @@ class Utils(commands.Cog):
         try:
             line_index = int(line_index)
         except ValueError:
-            line_index = -1  # Returns negative line index to indicate an error has occured.
+            line_index = -1  # Return negative line index to indicate an error has occurred.
 
         if line_index >= 0:
             with open("data/todo_list.txt", "r") as todo_file:
@@ -123,7 +113,7 @@ class Utils(commands.Cog):
                                   "sends the image of the graph as a file.")
     async def plot_memes(self, ctx, limit=0):
 
-        # Get all necessary meme data
+        # Get all necessary meme data.
         memes = []
         with shelve.open("data/memes_shelf") as memes_shelf:
             meme_keys = list(memes_shelf.keys())
@@ -137,8 +127,7 @@ class Utils(commands.Cog):
         meme_names = [meme[0] for meme in memes]
         meme_frequencies = [meme[1] for meme in memes]
 
-        # Plot it
-
+        # Plot the memes on the graph.
         plt.bar(meme_names, meme_frequencies)
         plt.title("Usage of memes")
         plt.xticks(rotation=90)

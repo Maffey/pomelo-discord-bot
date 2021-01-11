@@ -34,8 +34,9 @@ class Mod(commands.Cog):
     @commands.command(brief="Unbans selected user")
     @commands.has_permissions(ban_members=True)
     async def unban(self, ctx, *, member):
-        banned_users = await ctx.guild.bans()  # Gets list of banned users from the server.
-        # Splits the username to his name and discriminator (Discord user"s ID)
+        # Get list of banned users from the server.
+        banned_users = await ctx.guild.bans()
+        # Split the username to his name and discriminator (Discord user's ID).
         member_name, member_discriminator = member.split("#")
 
         for ban_entry in banned_users:
@@ -66,12 +67,12 @@ class Mod(commands.Cog):
     @commands.command(aliases=["addmeme"],
                       brief="Adds the given meme to the meme database")
     async def add_meme(self, ctx, hyperlink, *, keyword):
-        # TODO: Add check mechanism to prevent overwriting memes.
         keyword = keyword.lower()
-        # If the user tries to overwrite the list of memes, prevent this.
+        # If the user tries to overwrite the list of memes, they are prevented..
         if keyword == "help":
             await ctx.send("You cannot override the list of all the memes, you storming fool!")
             return
+        # TODO: Add check mechanism to prevent overwriting memes.
         with shelve.open("data/memes_shelf") as memes_shelf:
             memes_shelf[keyword] = {"hyperlink": hyperlink, "description": "**new meme**", "frequency": 0}
             await ctx.send("The meme has been added.")
@@ -80,7 +81,7 @@ class Mod(commands.Cog):
                       brief="Removes the meme from the meme database")
     @commands.has_permissions(administrator=True)
     async def del_meme(self, ctx, *, keyword):
-        # Remove the meme from shelf object.
+        keyword = keyword.lower()
         with shelve.open("data/memes_shelf") as memes_shelf:
             if keyword in memes_shelf:
                 del memes_shelf[keyword]
@@ -92,15 +93,13 @@ class Mod(commands.Cog):
                       brief="Changes meme description")
     @commands.has_permissions(administrator=True)
     async def set_meme_description(self, ctx, keyword, *, description):
-
         keyword = keyword.lower()
         keyword = keyword.replace("-", " ")
         keyword = keyword.replace("_", " ")
 
         with shelve.open("data/memes_shelf") as memes_shelf:
-            # figure out how to add help here
             try:
-                # Open up the meme.
+                # Find the meme by keyword and store it in 'meme_dict' variable.
                 meme_dict = memes_shelf[keyword]
             except KeyError:
                 await ctx.send("No such meme exists. You messed up!")

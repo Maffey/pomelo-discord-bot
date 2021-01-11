@@ -24,7 +24,6 @@ class Fun(commands.Cog):
                       description="Sends a desired meme to the chat. Type 'help' to get a list of all memes.")
     async def meme(self, ctx, *, keyword):
         """Send a meme the user wants to be sent by pasting a hyperlink from shelve database."""
-        # TODO: Add buffer to a function in another file and use it from there.
         keyword = keyword.lower()
         if keyword == "help":
             help_content: list = display_meme_help()
