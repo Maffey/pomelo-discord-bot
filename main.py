@@ -13,11 +13,10 @@ from discord.ext import commands, tasks
 # Log information about bot operations.
 logging.basicConfig(level=logging.INFO)
 
-# Get discord token from local file
-with open('data/token.json', 'r') as token_file:
-    token = json.load(token_file)
-    DISCORD_BOT_TOKEN = token["discord-token"]
+# Get Discord token from environmental variable.
+DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 
+# Default prefix for bot commands.
 DEFAULT_PREFIX = '.'
 
 
