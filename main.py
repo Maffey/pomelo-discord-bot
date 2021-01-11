@@ -1,6 +1,7 @@
 # IMPORTS
 
 import json
+import logging
 import os
 import sys
 import traceback
@@ -9,8 +10,8 @@ from itertools import cycle
 import discord
 from discord.ext import commands, tasks
 
-# Use the code snippet below when not debugging.
-# logging.basicConfig(level=logging.INFO, filename='data/bot_logs.txt', format='%(name)s - %(levelname)s - %(message)s')
+# Log information about bot operations.
+logging.basicConfig(level=logging.INFO)
 
 # Get discord token from local file
 with open('data/token.json', 'r') as token_file:
@@ -27,7 +28,7 @@ def get_prefix(client, message):
     return prefixes[str(message.guild.id)]
 
 
-client = commands.Bot(command_prefix=get_prefix)  # Sets the bot to treat a dot (.) as a call for command.
+pomelo_client = commands.Bot(command_prefix=get_prefix)  # Sets the bot to treat a dot (.) as a call for command.
 
 statuses = cycle(
     ('Powered by AWS!', 'Fresh, ripe and juicy!', 'Don\'t trust Pancake!',
@@ -38,13 +39,13 @@ statuses = cycle(
 
 
 # While bot is ready (i.e. is turned on) it prints out the message to console.
-@client.event
+@pomelo_client.event
 async def on_ready():
     change_status.start()
     print('Pomelo is fresh and ripe, lads!')
 
 
-@client.event
+@pomelo_client.event
 async def on_guild_join(guild):
     with open('data/prefixes.json', 'r') as json_file:
         prefixes = json.load(json_file)
@@ -55,7 +56,7 @@ async def on_guild_join(guild):
         json.dump(prefixes, json_file, indent=4)
 
 
-@client.event
+@pomelo_client.event
 async def on_guild_remove(guild):
     with open('data/prefixes.json', 'r') as json_file:
         prefixes = json.load(json_file)
@@ -67,19 +68,19 @@ async def on_guild_remove(guild):
 
 
 # When someone joins a server, print out info about who and what server they joined.
-@client.event
+@pomelo_client.event
 async def on_member_join(member):
     print(f'{member} has joined the {member.guild} server.')
 
 
 # When someone leaves a server, print out info about who and what server they left.
-@client.event
+@pomelo_client.event
 async def on_member_remove(member):
     print(f'{member} has left the {member.guild} server.')
 
 
 # When user forgets to put necessary arguments, mock them.
-@client.event
+@pomelo_client.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send(
@@ -101,12 +102,12 @@ async def on_command_error(ctx, error):
 
 @tasks.loop(seconds=15)
 async def change_status():
-    await client.change_presence(activity=discord.Game(next(statuses)))
+    await pomelo_client.change_presence(activity=discord.Game(next(statuses)))
 
 
 # Checks "cogs" folder for cog files (duh) and then loads them.
 for filename in os.listdir('cogs'):
     if filename.endswith('py'):
-        client.load_extension(f'cogs.{filename[:-3]}')
+        pomelo_client.load_extension(f'cogs.{filename[:-3]}')
 
-client.run(DISCORD_BOT_TOKEN)
+pomelo_client.run(DISCORD_BOT_TOKEN)

@@ -45,11 +45,12 @@ class Utils(commands.Cog):
 
         # Checks how much delay is there between bot and the server.
 
-    @commands.command()
+    @commands.command(brief="Pings Pomelo bot, checking the connection latency")
     async def ping(self, ctx):
         await ctx.send(f'Pong! {round(self.client.latency * 1000)} ms')
 
     @commands.command(aliases=['addtodo'],
+                      brief='Adds a TODO entry to the TODO list',
                       description='Adds a TODO to the list of things that will probably never be done. I hate myself. '
                                   'Life is suffering. The endless oblivion of things that should be done will '
                                   'eventually catch up with us all, causing devastation, chaos and misery. You really '
@@ -64,6 +65,7 @@ class Utils(commands.Cog):
             await ctx.send('The TODO has been added.')
 
     @commands.command(aliases=['todolist'],
+                      brief="Shows the TODO list",
                       description='Shows the TODO list. I mean, if we have the list already might as well take a look '
                                   'at it...')
     async def todo_list(self, ctx):
