@@ -19,15 +19,7 @@ DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 # Default prefix for bot commands.
 DEFAULT_PREFIX = "."
 
-
-def get_prefix(client, message):
-    with open("data/prefixes.json", "r") as json_file:
-        prefixes = json.load(json_file)
-
-    return prefixes[str(message.guild.id)]
-
-
-pomelo_client = commands.Bot(command_prefix=get_prefix)  # Sets the bot to treat a dot (.) as a call for command.
+pomelo_client = commands.Bot(command_prefix=DEFAULT_PREFIX)  # Sets the bot to treat a dot (.) as a call for command.
 
 statuses = cycle(
     ("Powered by fruit energy!", "Fresh, ripe and juicy!", "Don't trust Pancake!",
