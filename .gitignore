@@ -106,9 +106,6 @@ venv.bak/
 # Pycharm project configuration files
 .idea
 
-# Bot storage files
-data/
-
 # Backup of storage files
 data_backup.zip
 
