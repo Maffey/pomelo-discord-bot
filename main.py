@@ -27,7 +27,7 @@ statuses = cycle(
      "Completely insect-free!", "Type: \".help\"!"))
 
 
-def send_with_buffer(ctx, message_entries: list):
+async def send_with_buffer(ctx, message_entries: list):
     buffer = ""
     for entry in message_entries:
 
