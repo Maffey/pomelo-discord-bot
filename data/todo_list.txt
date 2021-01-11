@@ -1,13 +1,2 @@
-# TODO: if the bot is ever joining other servers, change permissions for manipulating meme database - 2019-09-23 17:57
-# TODO: add url regex to scrap meme keyword from the url - 2019-09-23 21:02
-# TODO: in the future add some nice API to work with - 2019-09-23 21:04
-# TODO: make some defense against commands in PM (add default prefix for such messages or a feedback indicating you can't use the commands there) - 2019-09-24
-# TODO: add hangman (and perhaps other games) - 2019-10-01 11:10
-# TODO: add the monty hall problem just for fun - 2019-10-05 21:30
-# TODO: learn and then add mongoDB for data persistence - 2019-10-17 16:25
-# TODO: add google calendar api to add reminders and events - 2019-10-29 08:28
-# TODO: backup command that saves "data" dir contents to .zip - 2019-11-11 07:59
-# TODO: add descriptions to bot commands - 2021-01-11 14:29
-# TODO: add documentation - 2021-01-11 14:35
-# TODO: change single-quotes to double-quotes - 2021-01-11 15:30
-# TODO: add vulnerability scanner and perhaps other ethical hacking scripts - 2021-01-11 17:16
+# TODO: add vulnerability scanner and perhaps other ethical hacking scripts - 2021-01-11 22:50
+# TODO: add hangman (and perhaps other games) - 2021-01-11 22:50
