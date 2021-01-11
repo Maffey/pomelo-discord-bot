@@ -16,7 +16,8 @@ class Fun(commands.Cog):
     Chooses a random response from the ones below to respond to user's question.
     """
 
-    @commands.command(aliases=["8ball"], description="Standard 8ball game.")
+    @commands.command(aliases=["8ball"],
+                      brief="Standard 8ball game")
     async def _8ball(self, ctx, *, question):
         with open("8ball_responses.txt", "r") as responses_file:
             responses = responses_file.readlines()
@@ -27,7 +28,8 @@ class Fun(commands.Cog):
     Sends the meme an user wants to be sent by pasting a hyperlink from PostImage library.
     """
 
-    @commands.command(description="Send a desired meme to the chat. Type 'help' to get a list of all memes.")
+    @commands.command(brief="Sends a desired meme to the chat",
+                      description="Sends a desired meme to the chat. Type 'help' to get a list of all memes.")
     async def meme(self, ctx, *, keyword):
 
         # TODO: Add buffer to a function in another, helper file (together with max_msg_length) and use it from there.
@@ -62,13 +64,15 @@ class Fun(commands.Cog):
             memes_shelf[keyword] = {"hyperlink": memes_shelf[keyword]["hyperlink"],
                                     "description": memes_shelf[keyword]["description"], "frequency": new_freq}
 
-    @commands.command(aliases=["mammamia", "mamma-mia"], description="Japierdole, Karolina!")
+    @commands.command(aliases=["mammamia", "mamma-mia"],
+                      brief="Japierdole, Karolina!")
     async def mamma_mia(self, ctx):
         karolina_sounds = ("https://vocaroo.com/i/s1ky8bx7G2iR", "https://vocaroo.com/i/s0dPvj6JAh8b",
                            "https://vocaroo.com/i/s19RlC11goAh")
         await ctx.send(f"https://i.imgflip.com/noa52.jpg\n{random.choice(karolina_sounds)}")
 
-    @commands.command(aliases=[".."])
+    @commands.command(aliases=[".."],
+                      brief="Don't be salty!")
     async def dot(self, ctx):
         await ctx.send("Why you trippin' bruh?")
 
