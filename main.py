@@ -36,28 +36,6 @@ async def on_ready():
     print("Pomelo is fresh and ripe, lads!")
 
 
-@pomelo_client.event
-async def on_guild_join(guild):
-    with open("data/prefixes.json", "r") as json_file:
-        prefixes = json.load(json_file)
-
-    prefixes[str(guild.id)] = DEFAULT_PREFIX
-
-    with open("data/prefixes.json", "w") as json_file:
-        json.dump(prefixes, json_file, indent=4)
-
-
-@pomelo_client.event
-async def on_guild_remove(guild):
-    with open("data/prefixes.json", "r") as json_file:
-        prefixes = json.load(json_file)
-
-    prefixes.pop(str(guild.id))
-
-    with open("data/prefixes.json", "w") as json_file:
-        json.dump(prefixes, json_file, indent=4)
-
-
 # When someone joins a server, print out info about who and what server they joined.
 @pomelo_client.event
 async def on_member_join(member):
@@ -83,7 +61,7 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.MissingPermissions):
         await ctx.send("You do not have permissions to use such command. Do not try to be tricky with me.")
 
-    # All other Errors not returned come here... And we can just print the default traceback.
+    # All other Exceptions not returned come here... And we can just print the default traceback.
     print(f"Ignoring exception in command {ctx.command}:", file=sys.stderr)
     traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 

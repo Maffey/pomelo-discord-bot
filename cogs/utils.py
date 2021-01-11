@@ -150,7 +150,7 @@ class Utils(commands.Cog):
 
     @commands.command(brief="Creates a backup of 'data' directory",
                       description="Creates a backup of 'data' directory which contains mutable data such as "
-                                  "meme database, TODO list, prefixes list, etc..")
+                                  "meme database, TODO list, etc..")
     async def backup(self, ctx):
         backup_to_zip()
         await ctx.send("The backup has been completed.")

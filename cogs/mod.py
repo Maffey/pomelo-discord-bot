@@ -11,20 +11,6 @@ class Mod(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command(aliases=["changeprefix"],
-                      brief="Changes command prefix")
-    @commands.has_permissions(administrator=True)
-    async def change_prefix(self, ctx, new_prefix):
-        with open("data/prefixes.json", "r") as json_file:
-            prefixes = json.load(json_file)
-
-        prefixes[str(ctx.guild.id)] = new_prefix
-
-        with open("data/prefixes.json", "w") as json_file:
-            json.dump(prefixes, json_file, indent=4)
-
-        await ctx.send(f"Prefix has been changed to '{new_prefix}'")
-
     @commands.command(brief="Clears messages from the chat")
     @commands.has_permissions(manage_messages=True)
     async def clear(self, ctx, amount=3):
