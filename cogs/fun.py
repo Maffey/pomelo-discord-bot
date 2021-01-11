@@ -67,7 +67,7 @@ class Fun(commands.Cog):
         await ctx.send("Why you trippin' bruh?")
 
 
-def display_meme_help():
+async def display_meme_help():
     """Index all the memes from the shelve database and display a list of memes to the user."""
     memes_list = []
     with shelve.open("data/memes_shelf") as memes_shelf:
