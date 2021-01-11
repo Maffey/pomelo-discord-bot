@@ -1,1 +1,1 @@
-worker: python pomelo-discord-bot/main.py
+worker: python main.py
