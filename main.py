@@ -1,14 +1,10 @@
-# IMPORTS
-
-import json
 import logging
 import os
 import sys
 import traceback
-from itertools import cycle
-
 import discord
 from discord.ext import commands, tasks
+from itertools import cycle
 
 # Log information about bot operations.
 logging.basicConfig(level=logging.INFO)
@@ -19,38 +15,31 @@ DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 # Default prefix for bot commands.
 DEFAULT_PREFIX = "."
 
-pomelo_client = commands.Bot(command_prefix=DEFAULT_PREFIX)  # Sets the bot to treat a dot (.) as a call for command.
+# Discord message length limit.
+MSG_CHAR_LIMIT = 2000
 
+# Set the bot client with '.' (dot) as a command prefix.
+pomelo_client = commands.Bot(command_prefix=DEFAULT_PREFIX)
+
+# Status text to be displayed in bot description.
 statuses = cycle(
     ("Powered by fruit energy!", "Fresh, ripe and juicy!", "Don't trust Pancake!",
-     "Completely insect-free!", "Keep your pomelos salt-free!"))
+     "Completely insect-free!", "Type: \".help\"!"))
 
 
 # EVENT LISTENERS
 
 
-# While bot is ready (i.e. is turned on) it prints out the message to console.
 @pomelo_client.event
 async def on_ready():
+    """If the bot is ready (i.e. is turned on), print out the message to console."""
     change_status.start()
-    print("Pomelo is fresh and ripe, lads!")
+    print("[ONLINE] Pomelo is fresh and ripe, lads!")
 
 
-# When someone joins a server, print out info about who and what server they joined.
-@pomelo_client.event
-async def on_member_join(member):
-    print(f"{member} has joined the {member.guild} server.")
-
-
-# When someone leaves a server, print out info about who and what server they left.
-@pomelo_client.event
-async def on_member_remove(member):
-    print(f"{member} has left the {member.guild} server.")
-
-
-# When user forgets to put necessary arguments, mock them.
 @pomelo_client.event
 async def on_command_error(ctx, error):
+    """If user forgets to put necessary arguments into a command, mock them."""
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send(
             "You're okay there pal? Because you've _clearly_ missed some of the arguments in your command... "
@@ -59,9 +48,9 @@ async def on_command_error(ctx, error):
         await ctx.send(
             "Are you delusional? Such command **doesn't exist** AT ALL. Type 'help' if you are feeling little _stale_.")
     elif isinstance(error, commands.MissingPermissions):
-        await ctx.send("You do not have permissions to use such command. Do not try to be tricky with me.")
+        await ctx.send("You do not have permissions to use such command. Do not try to be tricky with me, kid.")
 
-    # All other Exceptions not returned come here... And we can just print the default traceback.
+    # All other Exceptions not returned come here and the default traceback is then printed.
     print(f"Ignoring exception in command {ctx.command}:", file=sys.stderr)
     traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
@@ -71,12 +60,14 @@ async def on_command_error(ctx, error):
 
 @tasks.loop(seconds=15)
 async def change_status():
+    """Change status text every X seconds."""
     await pomelo_client.change_presence(activity=discord.Game(next(statuses)))
 
 
-# Checks "cogs" folder for cog files (duh) and then loads them.
-for filename in os.listdir("cogs"):
-    if filename.endswith("py"):
-        pomelo_client.load_extension(f"cogs.{filename[:-3]}")
+if __name__ == "__main__":
+    """Check 'cogs' directory for cog files (which are basically bot modules) and load them."""
+    for filename in os.listdir("cogs"):
+        if filename.endswith("py"):
+            pomelo_client.load_extension(f"cogs.{filename[:-3]}")
 
-pomelo_client.run(DISCORD_BOT_TOKEN)
+    pomelo_client.run(DISCORD_BOT_TOKEN)

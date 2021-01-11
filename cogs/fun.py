@@ -1,10 +1,7 @@
 import random
 import shelve
-
 from discord.ext import commands
-
-# TODO; Import this from main instead?
-MSG_CHAR_LIMIT = 2000  # Max message length on Discord.
+from main import MSG_CHAR_LIMIT
 
 
 class Fun(commands.Cog):
@@ -32,7 +29,7 @@ class Fun(commands.Cog):
                       description="Sends a desired meme to the chat. Type 'help' to get a list of all memes.")
     async def meme(self, ctx, *, keyword):
 
-        # TODO: Add buffer to a function in another, helper file (together with max_msg_length) and use it from there.
+        # TODO: Add buffer to a function in another file and use it from there.
         keyword = keyword.lower()
         if keyword == "help":
             help_content = display_meme_help()

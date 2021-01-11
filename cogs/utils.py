@@ -1,13 +1,11 @@
 import os
 import shelve
 import zipfile
-from datetime import datetime
-
 import discord.file
 import matplotlib.pyplot as plt
 from discord.ext import commands
-
-MSG_CHAR_LIMIT = 2000  # Max message length on Discord.
+from datetime import datetime
+from main import MSG_CHAR_LIMIT
 
 
 def backup_to_zip():
