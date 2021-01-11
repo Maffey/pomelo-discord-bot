@@ -65,8 +65,12 @@ class Mod(commands.Cog):
     @commands.command(aliases=["addmeme"],
                       brief="Adds the given meme to the meme database")
     async def add_meme(self, ctx, hyperlink, *, keyword):
-        # Place the meme in the shelf object. Overwriting existing meme is possible. Optionally, add defensive
-        # strategy later.
+        # TODO: Add check mechanism to prevent overwriting memes.
+        keyword = keyword.lower()
+        # If the user tries to overwrite the list of memes, prevent this.
+        if keyword == "help":
+            await ctx.send("You cannot override the list of all the memes, you fool!")
+            return
         with shelve.open("data/memes_shelf") as memes_shelf:
             memes_shelf[keyword] = {"hyperlink": hyperlink, "description": "**new meme**", "frequency": 0}
             await ctx.send("The meme has been added.")

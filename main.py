@@ -27,6 +27,20 @@ statuses = cycle(
      "Completely insect-free!", "Type: \".help\"!"))
 
 
+def send_with_buffer(ctx, message_entries: list):
+    buffer = ""
+    for entry in message_entries:
+
+        # When the buffer exceeds max character limit, dump the contents of the buffer into the message.
+        if len("```" + buffer + entry + "\n```") >= MSG_CHAR_LIMIT:
+            await ctx.send("```" + buffer + "```")
+            buffer = ""
+
+        buffer = buffer + entry + "\n"
+
+    await ctx.send("```" + buffer + "```")
+
+
 # EVENT LISTENERS
 
 
