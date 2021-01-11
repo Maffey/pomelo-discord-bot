@@ -1,10 +1,12 @@
 import os
 import shelve
 import zipfile
+from datetime import datetime
+
 import discord.file
 import matplotlib.pyplot as plt
 from discord.ext import commands
-from datetime import datetime
+
 from main import MSG_CHAR_LIMIT
 
 

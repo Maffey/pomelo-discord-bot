@@ -1,5 +1,6 @@
 import shelve
 import time
+
 import discord
 from discord.ext import commands
 
@@ -69,7 +70,7 @@ class Mod(commands.Cog):
         keyword = keyword.lower()
         # If the user tries to overwrite the list of memes, prevent this.
         if keyword == "help":
-            await ctx.send("You cannot override the list of all the memes, you fool!")
+            await ctx.send("You cannot override the list of all the memes, you storming fool!")
             return
         with shelve.open("data/memes_shelf") as memes_shelf:
             memes_shelf[keyword] = {"hyperlink": hyperlink, "description": "**new meme**", "frequency": 0}

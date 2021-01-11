@@ -2,9 +2,10 @@ import logging
 import os
 import sys
 import traceback
+from itertools import cycle
+
 import discord
 from discord.ext import commands, tasks
-from itertools import cycle
 
 # Log information about bot operations.
 logging.basicConfig(level=logging.INFO)

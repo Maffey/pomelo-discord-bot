@@ -1,8 +1,12 @@
 # Pomelo - Discord Bot
+
 ## Overview
-This Discord bot was originally made for private purposes (basically, sending memes).
-The bot grew exponentially and became a group project for a programming course at *WWSIS Horyzont*.
+
+This Discord bot was originally made for private purposes (basically, sending memes). The bot grew exponentially and
+became a group project for a programming course at *WWSIS Horyzont*.
+
 ## Used modules
+
 - **discord.py**
 - shelve
 - plotly

@@ -1,7 +1,9 @@
 import random
 import shelve
+
 from discord.ext import commands
-from main import MSG_CHAR_LIMIT
+
+from main import send_with_buffer
 
 
 class Fun(commands.Cog):
@@ -26,23 +28,10 @@ class Fun(commands.Cog):
         keyword = keyword.lower()
         if keyword == "help":
             help_content: list = display_meme_help()
-
-            buffer = ""
-            for meme in help_content:
-
-                # When the buffer overloads (i.e. exceeds 2 000 character limit),
-                # dump the contents of the buffer into the message.
-                if len("```" + buffer + meme + "\n```") >= MSG_CHAR_LIMIT:
-                    await ctx.send("```" + buffer + "```")
-                    buffer = ""
-
-                buffer = buffer + meme + "\n"
-
-            await ctx.send("```" + buffer + "```")
+            await send_with_buffer(ctx, help_content)
             return
 
         with shelve.open("data/memes_shelf") as memes_shelf:
-
             try:
                 # Sends link to a meme which is saved inside the shelf.
                 await ctx.send(memes_shelf[keyword]["hyperlink"])
