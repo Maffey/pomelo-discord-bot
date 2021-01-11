@@ -7,7 +7,6 @@ import discord.file
 import matplotlib.pyplot as plt
 from discord.ext import commands
 
-from main import MSG_CHAR_LIMIT
 from main import send_with_buffer
 
 

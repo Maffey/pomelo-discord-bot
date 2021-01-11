@@ -109,6 +109,9 @@ venv.bak/
 # Backup of storage files
 data_backup.zip
 
+# Directory with all the persistent data
+/data
+
 # Temp plotly file
 temp-plot.html
 
