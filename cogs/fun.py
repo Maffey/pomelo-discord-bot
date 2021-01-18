@@ -75,7 +75,10 @@ class Fun(commands.Cog):
                 list_of_throws = [random.randint(1, dice_sides) for _ in range(number_of_throws)]
                 # TODO: Mention the user which requested the command.
                 await ctx.send(f"Your throws ({number_of_throws}d{dice_sides}):")
-                await send_with_buffer(ctx, list_of_throws, " + ")
+                if number_of_throws > 1000:
+                    await ctx.send("```Too many throws. Printing skipped.```")
+                else:
+                    await send_with_buffer(ctx, list_of_throws, " + ")
                 # TODO: Optionally, add separators to the number before printing it.
                 # https://stackoverflow.com/questions/1823058/how-to-print-number-with-commas-as-thousands-separators
                 await ctx.send(f"**Result: {sum(list_of_throws)}**")
