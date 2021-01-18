@@ -28,16 +28,19 @@ statuses = cycle(
      "Completely insect-free!", "Type: \".help\"!"))
 
 
-async def send_with_buffer(ctx, message_entries: list):
+async def send_with_buffer(ctx, message_entries: list, separator="\n"):
     buffer = ""
-    for entry in message_entries:
-
+    for index, entry in enumerate(message_entries):
+        # Ensure 'entry' is a string so it can be concatenated.
+        entry = str(entry)
         # When the buffer exceeds max character limit, dump the contents of the buffer into the message.
-        if len("```" + buffer + entry + "\n```") >= MSG_CHAR_LIMIT:
+        if len("```" + buffer + entry + f"{separator}```") >= MSG_CHAR_LIMIT:
             await ctx.send("```" + buffer + "```")
             buffer = ""
 
-        buffer = buffer + entry + "\n"
+        buffer = buffer + entry
+        if index != len(message_entries) - 1:
+            buffer += separator
 
     await ctx.send("```" + buffer + "```")
 

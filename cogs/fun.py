@@ -49,10 +49,39 @@ class Fun(commands.Cog):
                            "https://vocaroo.com/i/s19RlC11goAh")
         await ctx.send(f"https://i.imgflip.com/noa52.jpg\n{random.choice(karolina_sounds)}")
 
+    # TODO: Hide from help?
     @commands.command(aliases=[".."],
                       brief="Don't be salty!")
     async def dot(self, ctx):
         await ctx.send("Why you trippin' bruh?")
+
+    @commands.command(aliases=["r"],
+                      brief="Rolls dice",
+                      description="Rolls dices based on XdY formula, "
+                                  "where X is a number of dices to be rolled and Y is a number of sides on the dice.")
+    async def roll(self, ctx, dice_roll):
+        try:
+            number_of_throws, dice_sides = dice_roll.split("d")
+            # If there's no number before 'd', assume only one dice is being thrown.
+            if number_of_throws == "":
+                number_of_throws = 1
+            number_of_throws, dice_sides = int(number_of_throws), int(dice_sides)
+            # In case the user wants to throw negative number of dices or make a stupid joke.
+            if number_of_throws <= 0 or dice_sides == 69 or dice_sides == 420 or dice_sides == 1337:
+                await ctx.send("Ha, ha, so amusing. Someone over here thinks himself a great comedian. "
+                               "You really must be fun at parties. Get lost.")
+            # If the input is okay and user doesn't try to make stupid jokes, the throws are performed.
+            else:
+                list_of_throws = [random.randint(1, dice_sides) for _ in range(number_of_throws)]
+                await ctx.send(f"Your throws ({number_of_throws}d{dice_sides}):")
+                await send_with_buffer(ctx, list_of_throws, " + ")
+                # TODO: Optionally, add separators to the number before printing it.
+                # https://stackoverflow.com/questions/1823058/how-to-print-number-with-commas-as-thousands-separators
+                await ctx.send(f"**Total: {sum(list_of_throws)}**")
+
+        except ValueError:
+            await ctx.send("It can't be *that* hard to properly form a dice roll, can it?"
+                           "Just type `<dices>d<sides>`. I believe in you.")
 
 
 def display_meme_help():
