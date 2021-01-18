@@ -73,11 +73,12 @@ class Fun(commands.Cog):
             # If the input is okay and user doesn't try to make stupid jokes, the throws are performed.
             else:
                 list_of_throws = [random.randint(1, dice_sides) for _ in range(number_of_throws)]
+                # TODO: Mention the user which requested the command.
                 await ctx.send(f"Your throws ({number_of_throws}d{dice_sides}):")
                 await send_with_buffer(ctx, list_of_throws, " + ")
                 # TODO: Optionally, add separators to the number before printing it.
                 # https://stackoverflow.com/questions/1823058/how-to-print-number-with-commas-as-thousands-separators
-                await ctx.send(f"**Total: {sum(list_of_throws)}**")
+                await ctx.send(f"**Result: {sum(list_of_throws)}**")
 
         except ValueError:
             await ctx.send("It can't be *that* hard to properly form a dice roll, can it?"
