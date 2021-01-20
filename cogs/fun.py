@@ -73,8 +73,7 @@ class Fun(commands.Cog):
             # If the input is okay and user doesn't try to make stupid jokes, the throws are performed.
             else:
                 list_of_throws = [random.randint(1, dice_sides) for _ in range(number_of_throws)]
-                # TODO: Mention the user which requested the command.
-                await ctx.send(f"You throw **{number_of_throws}d{dice_sides}**:")
+                await ctx.send(f"{ctx.message.author.mention} You throw **{number_of_throws}d{dice_sides}**:")
                 if number_of_throws > 1000:
                     await ctx.send("```Too many throws. Printing skipped.```")
                 else:
@@ -86,6 +85,9 @@ class Fun(commands.Cog):
         except ValueError:
             await ctx.send("It can't be *that* hard to properly form a dice roll, can it?"
                            "Just type `<dices>d<sides>`. I believe in you.")
+
+    # TODO: Add a command that randomly picks an user from the given list.
+    # example: .pick @me @someone @someone_too --> @someone
 
 
 def display_meme_help():
