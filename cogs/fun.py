@@ -86,8 +86,12 @@ class Fun(commands.Cog):
             await ctx.send("It can't be *that* hard to properly form a dice roll, can it?"
                            "Just type `<dices>d<sides>`. I believe in you.")
 
-    # TODO: Add a command that randomly picks an user from the given list.
-    # example: .pick @me @someone @someone_too --> @someone
+    @commands.command(brief="Chooses one user from given users",
+                      description="Chooses one user and mentions them from the list of users provided in the command, "
+                                  "separated by spaces.")
+    async def choose(self, ctx, *, list_of_users):
+        list_of_users = list_of_users.split()
+        await ctx.send(random.choice(list_of_users))
 
 
 def display_meme_help():
