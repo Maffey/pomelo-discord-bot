@@ -82,7 +82,7 @@ class Fun(commands.Cog):
             # If the input is okay and user doesn't try to make stupid jokes, the throws are performed.
             else:
                 list_of_throws = [random.randint(1, dice_sides) for _ in range(number_of_throws)]
-                await ctx.send(f"{ctx.message.author.mention}"
+                await ctx.send(f"{ctx.message.author.mention} "
                                f"You throw **{number_of_throws}d{dice_sides} + {addition_parameter}**:")
                 if number_of_throws > 1000:
                     await ctx.send("```Too many throws. Printing skipped.```")
