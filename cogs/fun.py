@@ -49,7 +49,6 @@ class Fun(commands.Cog):
                            "https://vocaroo.com/i/s19RlC11goAh")
         await ctx.send(f"https://i.imgflip.com/noa52.jpg\n{random.choice(karolina_sounds)}")
 
-    # TODO: Hide from help?
     @commands.command(aliases=[".."],
                       brief="Don't be salty!")
     async def dot(self, ctx):
@@ -59,9 +58,19 @@ class Fun(commands.Cog):
                       brief="Rolls dice",
                       description="Rolls dices based on XdY formula, "
                                   "where X is a number of dices to be rolled and Y is a number of sides on the dice.")
-    async def roll(self, ctx, dice_roll):
+    async def roll(self, ctx, dice_formula):
+        addition_parameter = 0
         try:
-            number_of_throws, dice_sides = dice_roll.split("d")
+            # If there's plus or minus sign in the formula, perform the addition/subtraction.
+            if "+" in dice_formula:
+                symbol_position = dice_formula.index("+")
+                addition_parameter = int(dice_formula[symbol_position + 1:])
+                dice_formula = dice_formula[:symbol_position]
+            elif "-" in dice_formula:
+                symbol_position = dice_formula.index("-")
+                addition_parameter = -int(dice_formula[symbol_position + 1:])
+                dice_formula = dice_formula[:symbol_position]
+            number_of_throws, dice_sides = dice_formula.split("d")
             # If there's no number before 'd', assume only one dice is being thrown.
             if number_of_throws == "":
                 number_of_throws = 1
@@ -73,14 +82,15 @@ class Fun(commands.Cog):
             # If the input is okay and user doesn't try to make stupid jokes, the throws are performed.
             else:
                 list_of_throws = [random.randint(1, dice_sides) for _ in range(number_of_throws)]
-                await ctx.send(f"{ctx.message.author.mention} You throw **{number_of_throws}d{dice_sides}**:")
+                await ctx.send(f"{ctx.message.author.mention}"
+                               f"You throw **{number_of_throws}d{dice_sides} + {addition_parameter}**:")
                 if number_of_throws > 1000:
                     await ctx.send("```Too many throws. Printing skipped.```")
                 else:
                     await send_with_buffer(ctx, list_of_throws, " + ")
-                # TODO: Optionally, add separators to the number before printing it.
+                # Optionally, add separators to the number before printing it.
                 # https://stackoverflow.com/questions/1823058/how-to-print-number-with-commas-as-thousands-separators
-                await ctx.send(f"```Result: {sum(list_of_throws)}```")
+                await ctx.send(f"```Result: {sum(list_of_throws) + addition_parameter}```")
 
         except ValueError:
             await ctx.send("It can't be *that* hard to properly form a dice roll, can it?"
