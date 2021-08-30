@@ -1,20 +1,8 @@
 # Pomelo - Discord Bot
 
-## Overview
+Sassy Discord bot with multiple small functionalities, used mostly for fun and learning.
 
-This Discord bot was originally made for private purposes (basically, sending memes). The bot grew exponentially and
-became a group project for a programming course at *WWSIS Horyzont*.
-
-## Used modules
-
-- **discord.py**
-- shelve
-- plotly
-- json
-- zipfile
-- matplotlib
-
-## How to run Pomelo
+## How to run Pomelo on AWS
 
 Connect to AWS server via your key (encrypts the password) using shell. if you type `ls` you will get all files listed
 on the server. Enter the folder with the *pomelo-discord-bot* and enter following command:

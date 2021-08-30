@@ -1,6 +1,7 @@
 import os
 import shelve
 import zipfile
+import psutil
 from datetime import datetime
 
 import discord.file
@@ -142,6 +143,17 @@ class Utils(commands.Cog):
     async def backup(self, ctx):
         backup_to_zip()
         await ctx.send("The backup has been completed.")
+
+    @commands.command(brief="Get system metrics",
+                      description="Get data about system metrics such as CPU and memory usage.")
+    async def stats(self, ctx):
+        await ctx.send("Gathering data, please wait...")
+        cpu_load = psutil.cpu_percent(4)
+        memory_usage = psutil.virtual_memory()[2]
+
+        await ctx.send(" ===== **SYSTEM METRICS** ===== \n"
+                       f"**CPU Load:** \t{cpu_load} %\n"
+                       f"**RAM Load:**\t{memory_usage} %\n")
 
 
 def setup(client):
