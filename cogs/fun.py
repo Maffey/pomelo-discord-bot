@@ -1,5 +1,6 @@
 import random
 import shelve
+import re
 
 from discord.ext import commands
 
@@ -58,43 +59,29 @@ class Fun(commands.Cog):
                       brief="Rolls dice",
                       description="Rolls dices based on XdY formula, "
                                   "where X is a number of dices to be rolled and Y is a number of sides on the dice.")
-    async def roll(self, ctx, dice_formula):
-        addition_parameter = 0
+    async def roll(self, ctx, *, throw_sequence):
+        # Define a regex to find all elements and find them.
+        elements_regex = r"(\d*d\d+|\d+|[\/\+\-\*])"
+        throw_sequence = re.findall(elements_regex, throw_sequence)
         try:
-            # If there's plus or minus sign in the formula, perform the addition/subtraction.
-            if "+" in dice_formula:
-                symbol_position = dice_formula.index("+")
-                addition_parameter = int(dice_formula[symbol_position + 1:])
-                dice_formula = dice_formula[:symbol_position]
-            elif "-" in dice_formula:
-                symbol_position = dice_formula.index("-")
-                addition_parameter = -int(dice_formula[symbol_position + 1:])
-                dice_formula = dice_formula[:symbol_position]
-            number_of_throws, dice_sides = dice_formula.split("d")
-            # If there's no number before 'd', assume only one dice is being thrown.
-            if number_of_throws == "":
-                number_of_throws = 1
-            number_of_throws, dice_sides = int(number_of_throws), int(dice_sides)
-            # In case the user wants to throw negative number of dices or make a stupid joke.
-            if number_of_throws <= 0 or dice_sides == 69 or dice_sides == 420 or dice_sides == 1337:
-                await ctx.send("Ha, ha, so amusing. Someone over here thinks himself a great comedian. "
-                               "You really must be fun at parties. Get lost.")
-            # If the input is okay and user doesn't try to make stupid jokes, the throws are performed.
-            else:
-                list_of_throws = [random.randint(1, dice_sides) for _ in range(number_of_throws)]
-                await ctx.send(f"{ctx.message.author.mention} "
-                               f"You throw **{number_of_throws}d{dice_sides} + {addition_parameter}**:")
-                if number_of_throws > 1000:
-                    await ctx.send("```Too many throws. Printing skipped.```")
-                else:
-                    await send_with_buffer(ctx, list_of_throws, " + ")
-                # Optionally, add separators to the number before printing it.
-                # https://stackoverflow.com/questions/1823058/how-to-print-number-with-commas-as-thousands-separators
-                await ctx.send(f"```Result: {sum(list_of_throws) + addition_parameter}```")
+            # Convert dice rolls to calculated throw values.
+            for index, element in enumerate(throw_sequence):
+                # If the substring in throw_sequence has a character 'd' in it, that means it's a dice roll.
+                if "d" in element:
+                    # Handle the dice roll And return the result here.
+                    dice_result = await handle_dice_roll(element, ctx)
+                    # Change the value in the list.
+                    throw_sequence[index] = dice_result
+
+            # After handling the dices, evaluate the throw_sequence as Python expression to easily calculate result.
+            total_result_value = eval("".join(throw_sequence))
+            await ctx.send(f"{ctx.message.author.mention} throws: {total_result_value}")
+            # TODO: add showing the throws sequence in a readable format.
 
         except ValueError:
             await ctx.send("It can't be *that* hard to properly form a dice roll, can it?"
-                           "Just type `<dices>d<sides>`. I believe in you.")
+                           "Just type sequence of dices, operators and number separated by space, for example:"
+                           "`5 + 3d8 - 5d6 + 4`. I believe in you.")
 
     @commands.command(brief="Chooses one user from given users",
                       description="Chooses one user and mentions them from the list of users provided in the command, "
@@ -115,6 +102,21 @@ def display_meme_help():
             memes_list.append(meme_entry)
 
     return memes_list
+
+
+async def handle_dice_roll(dice_roll: str, ctx) -> str:
+    number_of_throws, dice_sides = dice_roll.split("d")
+    # If there's no number before 'd', assume only one dice is being thrown.
+    if number_of_throws == "":
+        number_of_throws = 1
+    number_of_throws, dice_sides = int(number_of_throws), int(dice_sides)
+    # In case the user wants to throw negative number of dices.
+    if number_of_throws <= 0:
+        await ctx.send("Yeah. Negative number of throws. Very funny.")
+    else:
+        # Calculate the result for throwing dice given amount of times. '_' means the variable is not used.
+        dice_throws = [random.randint(1, dice_sides) for _ in range(number_of_throws)]
+        return str(sum(dice_throws))
 
 
 def setup(client):
