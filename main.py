@@ -28,6 +28,11 @@ statuses = cycle(
      "Completely insect-free!", "Type: \".help\"!"))
 
 
+# Simple exception for raising when input is too heavy to handle by the bot.
+class RoughInputException(Exception):
+    pass
+
+
 async def send_with_buffer(ctx, message_entries: list, separator="\n"):
     buffer = ""
     for index, entry in enumerate(message_entries):
