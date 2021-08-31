@@ -91,9 +91,8 @@ class Fun(commands.Cog):
                 # If message is not too long for Discord systems, send the message.
                 await ctx.send(message_to_send)
             else:
-                # Otherwise, inform user that there the throw sequence was too long.
-                await ctx.send(f"{ctx.message.author.mention} | Sorry mate, your throws were little over the top. "
-                               f"You need to be more brief, ya know?")
+                # Otherwise, raise an exception.
+                raise RoughInputException
 
         except (ValueError, SyntaxError):
             await ctx.send("It can't be *that* hard to properly form a dice roll, can it?"
@@ -101,7 +100,8 @@ class Fun(commands.Cog):
                            "`5 + 3d8 - 5d6 + 4`. I believe in you.")
 
         except RoughInputException:
-            await ctx.send("Oi! Mate, those numbers of yours - they are way too much!")
+            await ctx.send(f"{ctx.message.author.mention} Oi! Mate, those numbers of yours - they are way too much!"
+                           f"Keep it simple!")
 
     @commands.command(brief="Chooses one user from given users",
                       description="Chooses one user and mentions them from the list of users provided in the command, "
@@ -133,8 +133,8 @@ async def handle_dice_roll(dice_roll: str, ctx) -> tuple:
     if number_of_throws >= 1000 or dice_sides >= 1000:
         raise RoughInputException
     # In case the user wants to throw negative number of dices.
-    if number_of_throws <= 0:
-        await ctx.send("Yeah. Negative number of throws. Very funny.")
+    if number_of_throws == 0:
+        await ctx.send("Yeah. Zero throws. Very funny.")
     else:
         # Calculate the result for throwing dice given amount of times. '_' means the variable is not used.
         dice_throws = [random.randint(1, dice_sides) for _ in range(number_of_throws)]
