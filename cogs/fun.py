@@ -125,6 +125,8 @@ def display_meme_help():
 
 
 async def handle_dice_roll(dice_roll: str, ctx) -> tuple:
+    """Handle asingle dice roll provided in format: <number_of_dices>d<sides_of_dice>,
+    return sum of throws and list of throws."""
     number_of_throws, dice_sides = dice_roll.split("d")
     # If there's no number before 'd', assume only one dice is being thrown.
     if number_of_throws == "":
