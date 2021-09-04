@@ -6,7 +6,6 @@ from discord.ext import commands
 
 
 class Mod(commands.Cog):
-
     def __init__(self, client):
         self.client = client
 
@@ -15,7 +14,8 @@ class Mod(commands.Cog):
     async def clear(self, ctx, amount=3):
         amount += 2
         await ctx.send(
-            "**SNAP**\nhttps://media1.tenor.com/images/e36fb32cfc3b63075adf0f1843fdc43a/tenor.gif?itemid=12502580")
+            "**SNAP**\nhttps://media1.tenor.com/images/e36fb32cfc3b63075adf0f1843fdc43a/tenor.gif?itemid=12502580"
+        )
         time.sleep(1.8)
         await ctx.channel.purge(limit=amount)
 
@@ -64,21 +64,29 @@ class Mod(commands.Cog):
         self.client.unload_extension(f"cogs.{extension}")
         await ctx.send(f"The '{extension.upper()}' Cog has been unloaded.")
 
-    @commands.command(aliases=["addmeme"],
-                      brief="Adds the given meme to the meme database")
+    @commands.command(
+        aliases=["addmeme"], brief="Adds the given meme to the meme database"
+    )
     async def add_meme(self, ctx, hyperlink, *, keyword):
         keyword = keyword.lower()
         # If the user tries to overwrite the list of memes, they are prevented..
         if keyword == "help":
-            await ctx.send("You cannot override the list of all the memes, you storming fool!")
+            await ctx.send(
+                "You cannot override the list of all the memes, you storming fool!"
+            )
             return
         # TODO: Add check mechanism to prevent overwriting memes.
         with shelve.open("data/memes_shelf") as memes_shelf:
-            memes_shelf[keyword] = {"hyperlink": hyperlink, "description": "**new meme**", "frequency": 0}
+            memes_shelf[keyword] = {
+                "hyperlink": hyperlink,
+                "description": "**new meme**",
+                "frequency": 0,
+            }
             await ctx.send("The meme has been added.")
 
-    @commands.command(aliases=["delmeme"],
-                      brief="Removes the meme from the meme database")
+    @commands.command(
+        aliases=["delmeme"], brief="Removes the meme from the meme database"
+    )
     @commands.has_permissions(administrator=True)
     async def del_meme(self, ctx, *, keyword):
         keyword = keyword.lower()
@@ -89,8 +97,10 @@ class Mod(commands.Cog):
             else:
                 await ctx.send("There is no such meme, what are you doin'?")
 
-    @commands.command(aliases=["change_meme_description", "changedes"],
-                      brief="Changes meme description")
+    @commands.command(
+        aliases=["change_meme_description", "changedes"],
+        brief="Changes meme description",
+    )
     @commands.has_permissions(administrator=True)
     async def set_meme_description(self, ctx, keyword, *, description):
         keyword = keyword.lower()
@@ -104,10 +114,15 @@ class Mod(commands.Cog):
             except KeyError:
                 await ctx.send("No such meme exists. You messed up!")
 
-            meme_dict = {"hyperlink": meme_dict["hyperlink"], "description": str(description),
-                         "frequency": meme_dict["frequency"]}
+            meme_dict = {
+                "hyperlink": meme_dict["hyperlink"],
+                "description": str(description),
+                "frequency": meme_dict["frequency"],
+            }
             memes_shelf[keyword] = meme_dict
-        await ctx.send(f"The description of | **{keyword}** | has been changed to _'{description}'_.")
+        await ctx.send(
+            f"The description of | **{keyword}** | has been changed to _'{description}'_."
+        )
 
 
 def setup(client):

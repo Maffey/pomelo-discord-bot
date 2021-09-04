@@ -24,8 +24,14 @@ pomelo_client = commands.Bot(command_prefix=DEFAULT_PREFIX)
 
 # Status text to be displayed in bot description.
 statuses = cycle(
-    ("Powered by fruit energy!", "Fresh, ripe and juicy!", "Don't trust Pancake!",
-     "Completely insect-free!", "Type: \".help\"!"))
+    (
+        "Powered by fruit energy!",
+        "Fresh, ripe and juicy!",
+        "Don't trust Pancake!",
+        "Completely insect-free!",
+        'Type: ".help"!',
+    )
+)
 
 
 # Simple exception for raising when input is too heavy to handle by the bot.
@@ -66,12 +72,16 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send(
             "You're okay there pal? Because you've _clearly_ missed some of the arguments in your command... "
-            "_shakes head_")
+            "_shakes head_"
+        )
     elif isinstance(error, commands.CommandNotFound):
         await ctx.send(
-            "Are you delusional? Such command **doesn't exist** AT ALL. Type 'help' if you are feeling little _stale_.")
+            "Are you delusional? Such command **doesn't exist** AT ALL. Type 'help' if you are feeling little _stale_."
+        )
     elif isinstance(error, commands.MissingPermissions):
-        await ctx.send("You do not have permissions to use such command. Do not try to be tricky with me, kid.")
+        await ctx.send(
+            "You do not have permissions to use such command. Do not try to be tricky with me, kid."
+        )
 
     # All other Exceptions not returned come here and the default traceback is then printed.
     print(f"Ignoring exception in command {ctx.command}:", file=sys.stderr)
