@@ -2,3 +2,4 @@
 # TODO: add hangman (and perhaps other games) - 2021-01-11 22:50
 # TODO: add showing the throws sequence in a readable format. - 2021-08-30 23:39
 # TODO: pomelo needs tigther security so fucking much holy shit - 2021-08-31 21:58
+# TODO: make places into embed messages? - 2021-09-12 23:22

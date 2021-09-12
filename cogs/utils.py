@@ -3,12 +3,15 @@ import shelve
 import zipfile
 import psutil
 from datetime import datetime
+import googlemaps
+import pandas as pd
+import time
 
 import discord.file
 import matplotlib.pyplot as plt
 from discord.ext import commands
 
-from main import send_with_buffer
+from main import send_with_buffer, GOOGLE_API_TOKEN
 
 
 def backup_to_zip():
@@ -32,7 +35,7 @@ def backup_to_zip():
         # Add all the files in this folder to the ZIP file.
         for filename in filenames:
             if (
-                filename == zip_filename
+                    filename == zip_filename
             ):  # Can change it so for example,it only backs up .py files.
                 continue  # don"t backup the backup ZIP files
 
@@ -55,20 +58,20 @@ class Utils(commands.Cog):
         aliases=["addtodo"],
         brief="Adds a TODO entry to the TODO list",
         description="Adds a TODO to the list of things that will probably never be done. I hate myself. "
-        "Life is suffering. The endless oblivion of things that should be done will "
-        "eventually catch up with us all, causing devastation, chaos and misery. You really "
-        "want to contribute to it? That 'one additional thing we have to do' which you will "
-        "NEVER do? Think twice before adding anything, please.",
+                    "Life is suffering. The endless oblivion of things that should be done will "
+                    "eventually catch up with us all, causing devastation, chaos and misery. You really "
+                    "want to contribute to it? That 'one additional thing we have to do' which you will "
+                    "NEVER do? Think twice before adding anything, please.",
     )
     @commands.has_permissions(administrator=True)
     async def add_todo(self, ctx, *, todo_content):
         with open("data/todo_list.txt", "a") as todo_file:
             todo_string = (
-                "# TODO: "
-                + todo_content
-                + " - "
-                + str(datetime.now().strftime("%Y-%m-%d %H:%M"))
-                + "\n"
+                    "# TODO: "
+                    + todo_content
+                    + " - "
+                    + str(datetime.now().strftime("%Y-%m-%d %H:%M"))
+                    + "\n"
             )
             todo_file.write(todo_string)
 
@@ -78,7 +81,7 @@ class Utils(commands.Cog):
         aliases=["todolist"],
         brief="Shows the TODO list",
         description="Shows the TODO list. I mean, if we have the list already, might as well take a look "
-        "at it...",
+                    "at it...",
     )
     async def todo_list(self, ctx):
         with open("data/todo_list.txt", "r") as todo_file:
@@ -88,7 +91,7 @@ class Utils(commands.Cog):
         aliases=["deltodo"],
         brief="Removes a TODO entry",
         description="Removes given TODO entry from the list of TODO entries by the selected index. "
-        "'0' is the first entry, '1' is the second, etc.",
+                    "'0' is the first entry, '1' is the second, etc.",
     )
     @commands.has_permissions(administrator=True)
     async def del_todo(self, ctx, line_index):
@@ -123,8 +126,8 @@ class Utils(commands.Cog):
         aliases=["memedata"],
         brief="Shows dictionary data about a meme",
         description="Shows dictionary data about a meme, taken directly from the meme database, "
-        "such as the direct link to the image, "
-        "description or how many times the meme was used.",
+                    "such as the direct link to the image, "
+                    "description or how many times the meme was used.",
     )
     async def meme_data(self, ctx, *, keyword):
         with shelve.open("data/memes_shelf") as memes_shelf:
@@ -135,7 +138,7 @@ class Utils(commands.Cog):
         aliases=["plotmemes", "pltm"],
         brief="Plots how often memes are used",
         description="Plots how many times memes have been used using matplotlib and "
-        "sends the image of the graph as a file.",
+                    "sends the image of the graph as a file.",
     )
     async def plot_memes(self, ctx, limit=0):
 
@@ -168,7 +171,7 @@ class Utils(commands.Cog):
     @commands.command(
         brief="Creates a backup of 'data' directory",
         description="Creates a backup of 'data' directory which contains mutable data such as "
-        "meme database, TODO list, etc..",
+                    "meme database, TODO list, etc..",
     )
     async def backup(self, ctx):
         backup_to_zip()
@@ -188,6 +191,59 @@ class Utils(commands.Cog):
             f"**CPU Load:** \t{cpu_load} %\n"
             f"**RAM Load:**\t{memory_usage} %\n"
         )
+
+    @commands.command(
+        aliases=["fp"],
+        brief="Find nearby places",
+        description="Find nearby places using Google Maps API. Requires search query, city and distance in km."
+    )
+    async def find_places(self, ctx, searched_place, city, distance=10):
+        # Setup Google Maps API client.
+        map_client = googlemaps.Client(GOOGLE_API_TOKEN)
+        # Find location data based on search query - in this case: city.
+        geocode_result = map_client.geocode(city)
+        # Extract latitude and longitude from geocode result.
+        coordinates = geocode_result[0]["geometry"]["location"]
+        location = (coordinates["lat"], coordinates["lng"])
+        # With this variable, track found places.
+        places_list = []
+        # Convert kilometers to meters
+        distance = distance*1000
+
+        # Perform the search.
+        response = map_client.places_nearby(
+            location=location, keyword=searched_place, radius=distance
+        )
+
+        places_list += response.get("results")
+        # This token is neeeded to track our position on the search list.
+        # Google Maps allows for max. 20 results on one page.
+        next_page_token = response.get("next_page_token")
+
+        # Call API for more places results as long as there are any.
+        while next_page_token:
+            time.sleep(2)
+            response = map_client.places_nearby(
+                location=location,
+                keyword=searched_place,
+                radius=distance,
+                page_token=next_page_token,
+            )
+            places_list += response.get("results")
+            next_page_token = response.get("next_page_token")
+
+        df = pd.DataFrame(places_list)
+        # Store Google Maps url with the given place.
+        df["url"] = "www.google.com/maps/place/?q=place_id:" + df["place_id"]
+        # Remove closed locations.
+        df.drop(df[df.business_status != "OPERATIONAL"].index, inplace=True)
+        # Remove low rating locations.
+        df.drop(df[df.rating <= 3.5].index, inplace=True)
+
+        # Reduce data frame to the most important columns.
+        df = df[["name", "rating", "vicinity", "url"]]
+        df_rows = df.to_string(index=False).split(sep="\n")
+        await send_with_buffer(ctx, df_rows, separator="\n\n")
 
 
 def setup(client):

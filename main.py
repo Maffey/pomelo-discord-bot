@@ -13,6 +13,9 @@ logging.basicConfig(level=logging.INFO)
 # Get Discord token from environmental variable.
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 
+# Google Maps API token for searching places
+GOOGLE_API_TOKEN = os.getenv("GOOGLE_API_TOKEN")
+
 # Default prefix for bot commands.
 DEFAULT_PREFIX = "."
 
