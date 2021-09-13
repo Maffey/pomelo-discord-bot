@@ -63,7 +63,7 @@ class Utils(commands.Cog):
                     "want to contribute to it? That 'one additional thing we have to do' which you will "
                     "NEVER do? Think twice before adding anything, please.",
     )
-    @commands.has_permissions(administrator=True)
+    @commands.is_owner()
     async def add_todo(self, ctx, *, todo_content):
         with open("data/todo_list.txt", "a") as todo_file:
             todo_string = (
@@ -93,7 +93,7 @@ class Utils(commands.Cog):
         description="Removes given TODO entry from the list of TODO entries by the selected index. "
                     "'0' is the first entry, '1' is the second, etc.",
     )
-    @commands.has_permissions(administrator=True)
+    @commands.is_owner()
     async def del_todo(self, ctx, line_index):
         try:
             line_index = int(line_index)
@@ -173,6 +173,7 @@ class Utils(commands.Cog):
         description="Creates a backup of 'data' directory which contains mutable data such as "
                     "meme database, TODO list, etc..",
     )
+    @commands.is_owner()
     async def backup(self, ctx):
         backup_to_zip()
         await ctx.send("The backup has been completed.")

@@ -85,6 +85,10 @@ async def on_command_error(ctx, error):
         await ctx.send(
             "You do not have permissions to use such command. Do not try to be tricky with me, kid."
         )
+    elif isinstance(error, commands.NotOwner):
+        await ctx.send(
+            "Only The Creator Himself can call such words upon me."
+        )
 
     # All other Exceptions not returned come here and the default traceback is then printed.
     print(f"Ignoring exception in command {ctx.command}:", file=sys.stderr)

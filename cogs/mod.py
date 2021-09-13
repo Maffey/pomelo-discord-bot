@@ -46,20 +46,20 @@ class Mod(commands.Cog):
                 print(f"Unbanned {user}")
 
     @commands.command(brief="Loads the given Cog")
-    @commands.has_permissions(administrator=True)
+    @commands.is_owner()
     async def load(self, ctx, extension):
         self.client.load_extension(f"cogs.{extension}")
         await ctx.send(f"The '{extension.upper()}' Cog has been loaded.")
 
     @commands.command(brief="Reloads the given Cog")
-    @commands.has_permissions(administrator=True)
+    @commands.is_owner()
     async def reload(self, ctx, extension):
         self.client.unload_extension(f"cogs.{extension}")
         self.client.load_extension(f"cogs.{extension}")
         await ctx.send(f"The '{extension.upper()}' Cog has been reloaded.")
 
     @commands.command(brief="Unloads the given Cog")
-    @commands.has_permissions(administrator=True)
+    @commands.is_owner()
     async def unload(self, ctx, extension):
         self.client.unload_extension(f"cogs.{extension}")
         await ctx.send(f"The '{extension.upper()}' Cog has been unloaded.")
@@ -67,6 +67,7 @@ class Mod(commands.Cog):
     @commands.command(
         aliases=["addmeme"], brief="Adds the given meme to the meme database"
     )
+    @commands.has_permissions(administrator=True)
     async def add_meme(self, ctx, hyperlink, *, keyword):
         keyword = keyword.lower()
         # If the user tries to overwrite the list of memes, they are prevented..
@@ -87,7 +88,7 @@ class Mod(commands.Cog):
     @commands.command(
         aliases=["delmeme"], brief="Removes the meme from the meme database"
     )
-    @commands.has_permissions(administrator=True)
+    @commands.is_owner()
     async def del_meme(self, ctx, *, keyword):
         keyword = keyword.lower()
         with shelve.open("data/memes_shelf") as memes_shelf:
