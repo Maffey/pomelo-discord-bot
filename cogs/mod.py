@@ -4,6 +4,8 @@ import time
 import discord
 from discord.ext import commands
 
+from main import REQUESTS_COUNTER_FILE
+
 
 class Mod(commands.Cog):
     def __init__(self, client):
@@ -124,6 +126,28 @@ class Mod(commands.Cog):
         await ctx.send(
             f"The description of | **{keyword}** | has been changed to _'{description}'_."
         )
+
+    @commands.command(
+        aliases=["printapi"],
+        brief="Print number of API requests",
+        description="Print number of Google API requests. Tracked while executing places search."
+    )
+    @commands.is_owner()
+    async def print_api(self, ctx):
+        with open(REQUESTS_COUNTER_FILE, "r") as requests_count_file:
+            requests_count = int(requests_count_file.read())
+        await ctx.send(f"Current number of Google API requests executed: **{requests_count}**")
+
+    @commands.command(
+        aliases=["resetapi"],
+        brief="Reset tracked number of API requests",
+        description="Reset tracked number of Google API requests. Tracked while executing places search."
+    )
+    @commands.is_owner()
+    async def reset_api(self, ctx):
+        with open(REQUESTS_COUNTER_FILE, "w") as requests_count_file:
+            requests_count_file.write("0\n")
+        await ctx.send("Number of Google API requests successfully reset to 0.")
 
 
 def setup(client):

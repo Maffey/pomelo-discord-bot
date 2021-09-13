@@ -11,7 +11,7 @@ import discord.file
 import matplotlib.pyplot as plt
 from discord.ext import commands
 
-from main import send_with_buffer, GOOGLE_API_TOKEN
+from main import send_with_buffer, GOOGLE_API_TOKEN, REQUESTS_COUNTER_FILE
 
 
 def backup_to_zip():
@@ -199,7 +199,6 @@ class Utils(commands.Cog):
         description="Search nearby places using Google Maps API. Requires search query, city and distance in km."
     )
     async def search_places(self, ctx, searched_place, city, distance=10):
-        path_to_requests_counter_file = "data/google_api_requests.txt"
         # Setup Google Maps API client.
         map_client = googlemaps.Client(GOOGLE_API_TOKEN)
         # Find location data based on search query - in this case: city.
@@ -213,7 +212,7 @@ class Utils(commands.Cog):
         distance = distance*1000
 
         # Read current number of API requests performed into variable.
-        with open(path_to_requests_counter_file, "r") as requests_count_file:
+        with open(REQUESTS_COUNTER_FILE, "r") as requests_count_file:
             requests_count = int(requests_count_file.read())
 
         # Perform the search.
@@ -242,7 +241,7 @@ class Utils(commands.Cog):
             next_page_token = response.get("next_page_token")
 
         # Save new number of requests to the previous file.
-        with open(path_to_requests_counter_file, "w") as requests_count_file:
+        with open(REQUESTS_COUNTER_FILE, "w") as requests_count_file:
             requests_count_file.write(f"{requests_count}\n")
 
         df = pd.DataFrame(places_list)

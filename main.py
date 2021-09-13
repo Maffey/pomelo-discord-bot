@@ -22,6 +22,9 @@ DEFAULT_PREFIX = "."
 # Discord message length limit.
 MSG_CHAR_LIMIT = 2000
 
+# Path to file tracking number of Google API requests.
+REQUESTS_COUNTER_FILE = "data/google_api_requests.txt"
+
 # Set the bot client with '.' (dot) as a command prefix.
 pomelo_client = commands.Bot(command_prefix=DEFAULT_PREFIX)
 
@@ -75,11 +78,11 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send(
             "You're okay there pal? Because you've _clearly_ missed some of the arguments in your command... "
-            "_shakes head_"
+            "_shakes head_ Type '.help <command_name> to learn more about command."
         )
     elif isinstance(error, commands.CommandNotFound):
         await ctx.send(
-            "Are you delusional? Such command **doesn't exist** AT ALL. Type 'help' if you are feeling little _stale_."
+            "Are you delusional? Such command **doesn't exist** AT ALL. Type '.help' if you are feeling little _stale_."
         )
     elif isinstance(error, commands.MissingPermissions):
         await ctx.send(
@@ -87,7 +90,7 @@ async def on_command_error(ctx, error):
         )
     elif isinstance(error, commands.NotOwner):
         await ctx.send(
-            "Only The Creator Himself can call such words upon me."
+            "Only The Creator Himself can call such spells on me."
         )
 
     # All other Exceptions not returned come here and the default traceback is then printed.
