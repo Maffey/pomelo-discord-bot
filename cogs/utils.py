@@ -35,7 +35,7 @@ def backup_to_zip():
         # Add all the files in this folder to the ZIP file.
         for filename in filenames:
             if (
-                    filename == zip_filename
+                filename == zip_filename
             ):  # Can change it so for example,it only backs up .py files.
                 continue  # don"t backup the backup ZIP files
 
@@ -58,20 +58,20 @@ class Utils(commands.Cog):
         aliases=["addtodo"],
         brief="Adds a TODO entry to the TODO list",
         description="Adds a TODO to the list of things that will probably never be done. I hate myself. "
-                    "Life is suffering. The endless oblivion of things that should be done will "
-                    "eventually catch up with us all, causing devastation, chaos and misery. You really "
-                    "want to contribute to it? That 'one additional thing we have to do' which you will "
-                    "NEVER do? Think twice before adding anything, please.",
+        "Life is suffering. The endless oblivion of things that should be done will "
+        "eventually catch up with us all, causing devastation, chaos and misery. You really "
+        "want to contribute to it? That 'one additional thing we have to do' which you will "
+        "NEVER do? Think twice before adding anything, please.",
     )
     @commands.is_owner()
     async def add_todo(self, ctx, *, todo_content):
         with open("data/todo_list.txt", "a") as todo_file:
             todo_string = (
-                    "# TODO: "
-                    + todo_content
-                    + " - "
-                    + str(datetime.now().strftime("%Y-%m-%d %H:%M"))
-                    + "\n"
+                "# TODO: "
+                + todo_content
+                + " - "
+                + str(datetime.now().strftime("%Y-%m-%d %H:%M"))
+                + "\n"
             )
             todo_file.write(todo_string)
 
@@ -81,7 +81,7 @@ class Utils(commands.Cog):
         aliases=["todolist"],
         brief="Shows the TODO list",
         description="Shows the TODO list. I mean, if we have the list already, might as well take a look "
-                    "at it...",
+        "at it...",
     )
     async def todo_list(self, ctx):
         with open("data/todo_list.txt", "r") as todo_file:
@@ -91,7 +91,7 @@ class Utils(commands.Cog):
         aliases=["deltodo"],
         brief="Removes a TODO entry",
         description="Removes given TODO entry from the list of TODO entries by the selected index. "
-                    "'0' is the first entry, '1' is the second, etc.",
+        "'0' is the first entry, '1' is the second, etc.",
     )
     @commands.is_owner()
     async def del_todo(self, ctx, line_index):
@@ -126,8 +126,8 @@ class Utils(commands.Cog):
         aliases=["memedata"],
         brief="Shows dictionary data about a meme",
         description="Shows dictionary data about a meme, taken directly from the meme database, "
-                    "such as the direct link to the image, "
-                    "description or how many times the meme was used.",
+        "such as the direct link to the image, "
+        "description or how many times the meme was used.",
     )
     async def meme_data(self, ctx, *, keyword):
         with shelve.open("data/memes_shelf") as memes_shelf:
@@ -138,7 +138,7 @@ class Utils(commands.Cog):
         aliases=["plotmemes", "pltm"],
         brief="Plots how often memes are used",
         description="Plots how many times memes have been used using matplotlib and "
-                    "sends the image of the graph as a file.",
+        "sends the image of the graph as a file.",
     )
     async def plot_memes(self, ctx, limit=0):
 
@@ -171,7 +171,7 @@ class Utils(commands.Cog):
     @commands.command(
         brief="Creates a backup of 'data' directory",
         description="Creates a backup of 'data' directory which contains mutable data such as "
-                    "meme database, TODO list, etc..",
+        "meme database, TODO list, etc..",
     )
     @commands.is_owner()
     async def backup(self, ctx):
@@ -196,9 +196,12 @@ class Utils(commands.Cog):
     @commands.command(
         aliases=["sp"],
         brief="Search nearby places",
-        description="Search nearby places using Google Maps API. Requires search query, city and distance in km."
+        description="Search nearby places using Google Maps API. Requires search query, city and distance in km.",
     )
     async def search_places(self, ctx, searched_place, city, distance=10):
+        await ctx.send(
+            f"Searching for {searched_place} in {city}, radius: {distance}..."
+        )
         # Setup Google Maps API client.
         map_client = googlemaps.Client(GOOGLE_API_TOKEN)
         # Find location data based on search query - in this case: city.
@@ -209,7 +212,7 @@ class Utils(commands.Cog):
         # With this variable, track found places.
         places_list = []
         # Convert kilometers to meters
-        distance = distance*1000
+        distance = distance * 1000
 
         # Read current number of API requests performed into variable.
         with open(REQUESTS_COUNTER_FILE, "r") as requests_count_file:

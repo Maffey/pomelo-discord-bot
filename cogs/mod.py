@@ -130,18 +130,20 @@ class Mod(commands.Cog):
     @commands.command(
         aliases=["printapi"],
         brief="Print number of API requests",
-        description="Print number of Google API requests. Tracked while executing places search."
+        description="Print number of Google API requests. Tracked while executing places search.",
     )
     @commands.is_owner()
     async def print_api(self, ctx):
         with open(REQUESTS_COUNTER_FILE, "r") as requests_count_file:
             requests_count = int(requests_count_file.read())
-        await ctx.send(f"Current number of Google API requests executed: **{requests_count}**")
+        await ctx.send(
+            f"Current number of Google API requests executed: **{requests_count}**"
+        )
 
     @commands.command(
         aliases=["resetapi"],
         brief="Reset tracked number of API requests",
-        description="Reset tracked number of Google API requests. Tracked while executing places search."
+        description="Reset tracked number of Google API requests. Tracked while executing places search.",
     )
     @commands.is_owner()
     async def reset_api(self, ctx):

@@ -45,13 +45,24 @@ class RoughInputException(Exception):
     pass
 
 
-async def send_with_buffer(ctx, message_entries: list, separator="\n", message_block_indicator="```"):
+async def send_with_buffer(
+    ctx, message_entries: list, separator="\n", message_block_indicator="```"
+):
     buffer = ""
     for index, entry in enumerate(message_entries):
         # Ensure 'entry' is a string so it can be concatenated.
         entry = str(entry)
         # When the buffer exceeds max character limit, dump the contents of the buffer into the message.
-        if len(message_block_indicator + buffer + entry + separator + message_block_indicator) >= MSG_CHAR_LIMIT:
+        if (
+            len(
+                message_block_indicator
+                + buffer
+                + entry
+                + separator
+                + message_block_indicator
+            )
+            >= MSG_CHAR_LIMIT
+        ):
             await ctx.send(message_block_indicator + buffer + message_block_indicator)
             buffer = ""
 
@@ -89,9 +100,7 @@ async def on_command_error(ctx, error):
             "You do not have permissions to use such command. Do not try to be tricky with me, kid."
         )
     elif isinstance(error, commands.NotOwner):
-        await ctx.send(
-            "Only The Creator Himself can call such spells on me."
-        )
+        await ctx.send("Only The Creator Himself can call such spells on me.")
 
     # All other Exceptions not returned come here and the default traceback is then printed.
     print(f"Ignoring exception in command {ctx.command}:", file=sys.stderr)
