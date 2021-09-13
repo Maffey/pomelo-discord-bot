@@ -42,21 +42,21 @@ class RoughInputException(Exception):
     pass
 
 
-async def send_with_buffer(ctx, message_entries: list, separator="\n"):
+async def send_with_buffer(ctx, message_entries: list, separator="\n", message_block_indicator="```"):
     buffer = ""
     for index, entry in enumerate(message_entries):
         # Ensure 'entry' is a string so it can be concatenated.
         entry = str(entry)
         # When the buffer exceeds max character limit, dump the contents of the buffer into the message.
-        if len("```" + buffer + entry + f"{separator}```") >= MSG_CHAR_LIMIT:
-            await ctx.send("```" + buffer + "```")
+        if len(message_block_indicator + buffer + entry + separator + message_block_indicator) >= MSG_CHAR_LIMIT:
+            await ctx.send(message_block_indicator + buffer + message_block_indicator)
             buffer = ""
 
         buffer = buffer + entry
         if index != len(message_entries) - 1:
             buffer += separator
 
-    await ctx.send("```" + buffer + "```")
+    await ctx.send(message_block_indicator + buffer + message_block_indicator)
 
 
 # EVENT LISTENERS

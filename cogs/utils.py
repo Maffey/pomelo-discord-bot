@@ -193,11 +193,12 @@ class Utils(commands.Cog):
         )
 
     @commands.command(
-        aliases=["fp"],
-        brief="Find nearby places",
-        description="Find nearby places using Google Maps API. Requires search query, city and distance in km."
+        aliases=["sp"],
+        brief="Search nearby places",
+        description="Search nearby places using Google Maps API. Requires search query, city and distance in km."
     )
-    async def find_places(self, ctx, searched_place, city, distance=10):
+    async def search_places(self, ctx, searched_place, city, distance=10):
+        path_to_requests_counter_file = "data/google_api_requests.txt"
         # Setup Google Maps API client.
         map_client = googlemaps.Client(GOOGLE_API_TOKEN)
         # Find location data based on search query - in this case: city.
@@ -210,10 +211,16 @@ class Utils(commands.Cog):
         # Convert kilometers to meters
         distance = distance*1000
 
+        # Read current number of API requests performed into variable.
+        with open(path_to_requests_counter_file, "r") as requests_count_file:
+            requests_count = int(requests_count_file.read())
+
         # Perform the search.
         response = map_client.places_nearby(
             location=location, keyword=searched_place, radius=distance
         )
+        # Count the number of requests.
+        requests_count += 1
 
         places_list += response.get("results")
         # This token is neeeded to track our position on the search list.
@@ -229,8 +236,13 @@ class Utils(commands.Cog):
                 radius=distance,
                 page_token=next_page_token,
             )
+            requests_count += 1
             places_list += response.get("results")
             next_page_token = response.get("next_page_token")
+
+        # Save new number of requests to the previous file.
+        with open(path_to_requests_counter_file, "w") as requests_count_file:
+            requests_count_file.write(f"{requests_count}\n")
 
         df = pd.DataFrame(places_list)
         # Store Google Maps url with the given place.
