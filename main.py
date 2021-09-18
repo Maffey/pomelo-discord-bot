@@ -16,6 +16,9 @@ DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 # Google Maps API token for searching places
 GOOGLE_API_TOKEN = os.getenv("GOOGLE_API_TOKEN")
 
+# MongoDB connection string
+MONGODB_CONNECTION_STRING = os.getenv("MONGODB_CONNECTION_STRING")
+
 # Default prefix for bot commands.
 DEFAULT_PREFIX = "."
 

@@ -1,10 +1,10 @@
 import shelve
 import time
-
+import pymongo
 import discord
 from discord.ext import commands
 
-from main import REQUESTS_COUNTER_FILE
+from main import REQUESTS_COUNTER_FILE, MONGODB_CONNECTION_STRING
 
 
 class Mod(commands.Cog):
@@ -150,6 +150,31 @@ class Mod(commands.Cog):
         with open(REQUESTS_COUNTER_FILE, "w") as requests_count_file:
             requests_count_file.write("0\n")
         await ctx.send("Number of Google API requests successfully reset to 0.")
+
+    @commands.is_owner()
+    @commands.command(brief="Run once.")
+    async def migrate(self, ctx):
+        # Create a connection using MongoClient. You can import MongoClient or use pymongo.MongoClient
+        client = pymongo.MongoClient(MONGODB_CONNECTION_STRING)
+
+        # Create the database for our example (we will use the same database throughout the tutorial
+        pomelo_db = client["pomelo_db"]
+        memes_collection = pomelo_db["memes"]
+
+        with shelve.open("data/memes_shelf") as memes_shelf:
+            meme_keys = list(memes_shelf.keys())
+            for key in meme_keys:
+                meme_name = key
+                description = memes_shelf[key]["description"]
+                times_used = memes_shelf[key]["frequency"]
+                url = memes_shelf[key]["hyperlink"]
+                item = {
+                    "name": key,
+                    "description": description,
+                    "times_used": times_used,
+                    "url": url
+                }
+                memes_collection.insert_one(item)
 
 
 def setup(client):
