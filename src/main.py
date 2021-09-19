@@ -22,71 +22,35 @@ MONGODB_CONNECTION_STRING = os.getenv("MONGODB_CONNECTION_STRING")
 # Default prefix for bot commands.
 DEFAULT_PREFIX = "."
 
-# Discord message length limit.
-MSG_CHAR_LIMIT = 2000
-
 # Path to file tracking number of Google API requests.
-REQUESTS_COUNTER_FILE = "data/google_api_requests.txt"
+REQUESTS_COUNTER_FILE = "../data/google_api_requests.txt"  # todo
 
 # Set the bot client with '.' (dot) as a command prefix.
-pomelo_client = commands.Bot(command_prefix=DEFAULT_PREFIX)
+POMELO_CLIENT = commands.Bot(command_prefix=DEFAULT_PREFIX)
 
 # Status text to be displayed in bot description.
-statuses = cycle(
+STATUS_LIST = cycle(
     (
-        "Powered by fruit energy!",
-        "Fresh, ripe and juicy!",
+        "Powered by fruit energy.",
+        "Fresh, ripe and juicy.",
         "Don't trust Pancake!",
         "Completely insect-free!",
-        'Type: ".help"!',
+        'Type: ".help"',
     )
 )
-
-
-# Simple exception for raising when input is too heavy to handle by the bot.
-class RoughInputException(Exception):
-    pass
-
-
-async def send_with_buffer(
-    ctx, message_entries: list, separator="\n", message_block_indicator="```"
-):
-    buffer = ""
-    for index, entry in enumerate(message_entries):
-        # Ensure 'entry' is a string so it can be concatenated.
-        entry = str(entry)
-        # When the buffer exceeds max character limit, dump the contents of the buffer into the message.
-        if (
-            len(
-                message_block_indicator
-                + buffer
-                + entry
-                + separator
-                + message_block_indicator
-            )
-            >= MSG_CHAR_LIMIT
-        ):
-            await ctx.send(message_block_indicator + buffer + message_block_indicator)
-            buffer = ""
-
-        buffer = buffer + entry
-        if index != len(message_entries) - 1:
-            buffer += separator
-
-    await ctx.send(message_block_indicator + buffer + message_block_indicator)
 
 
 # EVENT LISTENERS
 
 
-@pomelo_client.event
+@POMELO_CLIENT.event
 async def on_ready():
     """If the bot is ready (i.e. is turned on), print out the message to console."""
     change_status.start()
     print("[ONLINE] Pomelo is fresh and ripe, lads!")
 
 
-@pomelo_client.event
+@POMELO_CLIENT.event
 async def on_command_error(ctx, error):
     """If user forgets to put necessary arguments into a command, mock them."""
     if isinstance(error, commands.MissingRequiredArgument):
@@ -116,13 +80,13 @@ async def on_command_error(ctx, error):
 @tasks.loop(seconds=15)
 async def change_status():
     """Change status text every X seconds."""
-    await pomelo_client.change_presence(activity=discord.Game(next(statuses)))
+    await POMELO_CLIENT.change_presence(activity=discord.Game(next(STATUS_LIST)))
 
 
 if __name__ == "__main__":
     """Check 'cogs' directory for cog files (which are basically bot modules) and load them."""
     for filename in os.listdir("cogs"):
         if filename.endswith("py"):
-            pomelo_client.load_extension(f"cogs.{filename[:-3]}")
+            POMELO_CLIENT.load_extension(f"cogs.{filename[:-3]}")
 
-    pomelo_client.run(DISCORD_BOT_TOKEN)
+    POMELO_CLIENT.run(DISCORD_BOT_TOKEN)

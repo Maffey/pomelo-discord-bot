@@ -4,7 +4,8 @@ import re
 
 from discord.ext import commands
 
-from main import MSG_CHAR_LIMIT, send_with_buffer, RoughInputException
+from src.utilities import RoughInputException, send_with_buffer, MESSAGE_CHARACTER_LIMIT, handle_dice_roll,\
+    get_memes_as_entries, get_meme, get_collection, update_meme
 
 
 class Fun(commands.Cog):
@@ -23,28 +24,25 @@ class Fun(commands.Cog):
         brief="Sends a desired meme to the chat",
         description="Sends a desired meme to the chat. Type 'help' to get a list of all memes.",
     )
-    async def meme(self, ctx, *, keyword):
+    async def meme(self, ctx, *, meme_name):
         """Send a meme the user wants to be sent by pasting a hyperlink from shelve database."""
-        keyword = keyword.lower()
-        if keyword == "help":
-            help_content: list = display_meme_help()
+        # Get meme collection
+        memes_collection = get_collection("memes")
+
+        meme_name = meme_name.lower()
+        if meme_name == "help":
+            help_content = get_memes_as_entries(memes_collection)
             await send_with_buffer(ctx, help_content)
             return
 
-        with shelve.open("data/memes_shelf") as memes_shelf:
-            try:
-                # Sends link to a meme which is saved inside the shelf.
-                await ctx.send(memes_shelf[keyword]["hyperlink"])
-            except KeyError:
-                await ctx.send("No such meme exists. You messed up!")
-
-            # Stores the frequency of usage.
-            new_freq = memes_shelf[keyword]["frequency"] + 1
-            memes_shelf[keyword] = {
-                "hyperlink": memes_shelf[keyword]["hyperlink"],
-                "description": memes_shelf[keyword]["description"],
-                "frequency": new_freq,
-            }
+        # Get link to a meme which is stored inside the database.
+        meme = get_meme(memes_collection, meme_name)
+        if meme is not None:
+            await ctx.send(meme["url"])
+            # Update number of times this meme was used.
+            update_meme(memes_collection, meme["_id"], "times_used", meme["times_used"] + 1)
+        else:
+            await ctx.send("No such meme exists. You messed up!")
 
     @commands.command(aliases=["mammamia", "mamma-mia"], brief="Japierdole, Karolina!")
     async def mamma_mia(self, ctx):
@@ -99,7 +97,7 @@ class Fun(commands.Cog):
                 f"{ctx.message.author.mention} throws: {throw_sequence_print}\n"
                 f"**Total: ** {total_result_value}"
             )
-            if len(message_to_send) <= MSG_CHAR_LIMIT:
+            if len(message_to_send) <= MESSAGE_CHARACTER_LIMIT:
                 # If message is not too long for Discord systems, send the message.
                 await ctx.send(message_to_send)
             else:
@@ -127,38 +125,6 @@ class Fun(commands.Cog):
     async def choose(self, ctx, *, list_of_users):
         list_of_users = list_of_users.split()
         await ctx.send(random.choice(list_of_users))
-
-
-def display_meme_help():
-    """Index all the memes from the shelve database and display a list of memes to the user."""
-    memes_list = []
-    with shelve.open("data/memes_shelf") as memes_shelf:
-        meme_keys = list(memes_shelf.keys())
-        for key in meme_keys:
-            description = memes_shelf[key]["description"]
-            meme_entry = f"* | {key} | {description}"
-            memes_list.append(meme_entry)
-
-    return memes_list
-
-
-async def handle_dice_roll(dice_roll: str, ctx) -> tuple:
-    """Handle a single dice roll provided in format: <number_of_dices>d<sides_of_dice>,
-    return sum of throws and list of throws."""
-    number_of_throws, dice_sides = dice_roll.split("d")
-    # If there's no number before 'd', assume only one dice is being thrown.
-    if number_of_throws == "":
-        number_of_throws = 1
-    number_of_throws, dice_sides = int(number_of_throws), int(dice_sides)
-    if number_of_throws >= 1000 or dice_sides >= 1000:
-        raise RoughInputException
-    # In case the user wants to throw negative number of dices.
-    if number_of_throws == 0:
-        await ctx.send("Yeah. Zero throws. Very funny.")
-    else:
-        # Calculate the result for throwing dice given amount of times. '_' means the variable is not used.
-        dice_throws = [random.randint(1, dice_sides) for _ in range(number_of_throws)]
-        return str(sum(dice_throws)), dice_throws
 
 
 def setup(client):

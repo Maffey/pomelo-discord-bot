@@ -1,6 +1,4 @@
-import os
 import shelve
-import zipfile
 import psutil
 from datetime import datetime
 import googlemaps
@@ -11,37 +9,8 @@ import discord.file
 import matplotlib.pyplot as plt
 from discord.ext import commands
 
-from main import send_with_buffer, GOOGLE_API_TOKEN, REQUESTS_COUNTER_FILE
-
-
-def backup_to_zip():
-    # Backup the entire contents of "data" folder into a ZIP file.
-    folder = "data"
-
-    folder = os.path.abspath(folder)  # make sure folder is absolute
-
-    # Figure out the filename this code should use based on what files already exist.
-    zip_filename = os.path.basename(folder) + "_backup.zip"
-
-    # Create the ZIP file.
-    print(f"Creating {zip_filename}")
-    backup_zip = zipfile.ZipFile(zip_filename, "w")
-
-    # Walk the entire folder tree and compress the files in each folder.
-    for foldername, subfolders, filenames in os.walk(folder):
-        print(f"Adding files in {foldername} to backup...")
-        # Add the current folder to the ZIP file.
-        backup_zip.write(foldername)
-        # Add all the files in this folder to the ZIP file.
-        for filename in filenames:
-            if (
-                filename == zip_filename
-            ):  # Can change it so for example,it only backs up .py files.
-                continue  # don"t backup the backup ZIP files
-
-            backup_zip.write(os.path.join(foldername, filename))
-    backup_zip.close()
-    print("The backup has been completed.")
+from src.main import GOOGLE_API_TOKEN, REQUESTS_COUNTER_FILE
+from src.utilities import send_with_buffer, backup_to_zip, get_collection, get_meme, get_all_memes
 
 
 class Utils(commands.Cog):
@@ -129,10 +98,13 @@ class Utils(commands.Cog):
         "such as the direct link to the image, "
         "description or how many times the meme was used.",
     )
-    async def meme_data(self, ctx, *, keyword):
-        with shelve.open("data/memes_shelf") as memes_shelf:
-            meme_content = memes_shelf[keyword]
-            await ctx.send(str(meme_content))
+    async def meme_data(self, ctx, *, meme_name):
+        memes_collection = get_collection("memes")
+        meme = get_meme(memes_collection, meme_name)
+        if meme is not None:
+            await ctx.send(meme)
+        else:
+            await ctx.send("No such meme exists. You messed up!")
 
     @commands.command(
         aliases=["plotmemes", "pltm"],
@@ -140,21 +112,21 @@ class Utils(commands.Cog):
         description="Plots how many times memes have been used using matplotlib and "
         "sends the image of the graph as a file.",
     )
-    async def plot_memes(self, ctx, limit=0):
+    async def plot_memes(self, ctx, times_used_limit=0):
 
-        # Get all necessary meme data.
-        memes = []
-        with shelve.open("data/memes_shelf") as memes_shelf:
-            meme_keys = list(memes_shelf.keys())
-            for key in meme_keys:
-                frequency = memes_shelf[key]["frequency"]
-                if frequency > limit:
-                    memes.append((key, frequency))
+        memes_collection = get_collection("memes")
+        memes_list = get_all_memes(memes_collection)
+        memes_to_plot = []
+        for meme_document in memes_list:
+            times_used = meme_document["times_used"]
+            if times_used > times_used_limit:
+                name = meme_document["name"]
+                memes_to_plot.append((name, times_used))
 
         # Sort the memes by frequency and capture their names and values into lists
-        memes = sorted(memes, key=lambda meme: meme[1], reverse=True)
-        meme_names = [meme[0] for meme in memes]
-        meme_frequencies = [meme[1] for meme in memes]
+        memes_to_plot = sorted(memes_to_plot, key=lambda meme: meme[1], reverse=True)
+        meme_names = [meme[0] for meme in memes_to_plot]
+        meme_frequencies = [meme[1] for meme in memes_to_plot]
 
         # Plot the memes on the graph.
         plt.bar(meme_names, meme_frequencies)
@@ -162,10 +134,10 @@ class Utils(commands.Cog):
         plt.xticks(rotation=90)
         plt.xlabel("Meme names")
         plt.ylabel("Times used")
-        plt.savefig("data/memes_chart.png", bbox_inches="tight")
+        plt.savefig("../data/memes_chart.png", bbox_inches="tight")
         plt.close()
         await ctx.send(
-            "Here's your graph. Enjoy!", file=discord.File("data/memes_chart.png")
+            "Here's your graph. Enjoy!", file=discord.File("../data/memes_chart.png")
         )
 
     @commands.command(

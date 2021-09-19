@@ -1,10 +1,10 @@
 import shelve
 import time
-import pymongo
 import discord
 from discord.ext import commands
 
-from main import REQUESTS_COUNTER_FILE, MONGODB_CONNECTION_STRING
+from src.main import REQUESTS_COUNTER_FILE
+from src.utilities import insert_meme, get_collection, update_meme, get_meme, delete_meme
 
 
 class Mod(commands.Cog):
@@ -70,62 +70,52 @@ class Mod(commands.Cog):
         aliases=["addmeme"], brief="Adds the given meme to the meme database"
     )
     @commands.has_permissions(administrator=True)
-    async def add_meme(self, ctx, hyperlink, *, keyword):
-        keyword = keyword.lower()
+    async def add_meme(self, ctx, link_to_meme, *, meme_name):
+        meme_name = meme_name.lower()
         # If the user tries to overwrite the list of memes, they are prevented..
-        if keyword == "help":
+        if meme_name == "help":
             await ctx.send(
                 "You cannot override the list of all the memes, you storming fool!"
             )
             return
-        # TODO: Add check mechanism to prevent overwriting memes.
-        with shelve.open("data/memes_shelf") as memes_shelf:
-            memes_shelf[keyword] = {
-                "hyperlink": hyperlink,
-                "description": "**new meme**",
-                "frequency": 0,
-            }
-            await ctx.send("The meme has been added.")
+        # Add meme to database.
+        memes_collection = get_collection("memes")
+        insert_meme(memes_collection, meme_name, link_to_meme)
+        await ctx.send("The meme has been added.")
 
     @commands.command(
         aliases=["delmeme"], brief="Removes the meme from the meme database"
     )
     @commands.is_owner()
-    async def del_meme(self, ctx, *, keyword):
-        keyword = keyword.lower()
-        with shelve.open("data/memes_shelf") as memes_shelf:
-            if keyword in memes_shelf:
-                del memes_shelf[keyword]
-                await ctx.send("The meme has been removed.")
-            else:
-                await ctx.send("There is no such meme, what are you doin'?")
+    async def delete_meme(self, ctx, *, meme_name):
+        meme_name = meme_name.lower()
+        memes_collection = get_collection("memes")
+        meme = get_meme(memes_collection, meme_name)
+        if meme is not None:
+            delete_meme(memes_collection, meme["_id"])
+            await ctx.send("The meme has been removed.")
+        else:
+            await ctx.send("No such meme exists. You messed up!")
 
     @commands.command(
         aliases=["change_meme_description", "changedes"],
         brief="Changes meme description",
     )
     @commands.has_permissions(administrator=True)
-    async def set_meme_description(self, ctx, keyword, *, description):
-        keyword = keyword.lower()
-        keyword = keyword.replace("-", " ")
-        keyword = keyword.replace("_", " ")
+    async def set_meme_description(self, ctx, meme_name, *, description):
+        meme_name = meme_name.lower()
+        meme_name = meme_name.replace("-", " ")
+        meme_name = meme_name.replace("_", " ")
 
-        with shelve.open("data/memes_shelf") as memes_shelf:
-            try:
-                # Find the meme by keyword and store it in 'meme_dict' variable.
-                meme_dict = memes_shelf[keyword]
-            except KeyError:
-                await ctx.send("No such meme exists. You messed up!")
-
-            meme_dict = {
-                "hyperlink": meme_dict["hyperlink"],
-                "description": str(description),
-                "frequency": meme_dict["frequency"],
-            }
-            memes_shelf[keyword] = meme_dict
-        await ctx.send(
-            f"The description of | **{keyword}** | has been changed to _'{description}'_."
-        )
+        memes_collection = get_collection("memes")
+        meme = get_meme(memes_collection, meme_name)
+        if meme is not None:
+            update_meme(memes_collection, meme["_id"], "description", description)
+            await ctx.send(
+                f"The description of | **{meme_name}** | has been changed to _'{description}'_."
+            )
+        else:
+            await ctx.send("No such meme exists. You messed up!")
 
     @commands.command(
         aliases=["printapi"],
