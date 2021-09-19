@@ -23,7 +23,7 @@ MONGODB_CONNECTION_STRING = os.getenv("MONGODB_CONNECTION_STRING")
 DEFAULT_PREFIX = "."
 
 # Path to file tracking number of Google API requests.
-REQUESTS_COUNTER_FILE = "../data/google_api_requests.txt"  # todo
+REQUESTS_COUNTER_FILE = "data/google_api_requests.txt"  # todo
 
 # Set the bot client with '.' (dot) as a command prefix.
 POMELO_CLIENT = commands.Bot(command_prefix=DEFAULT_PREFIX)
@@ -85,7 +85,7 @@ async def change_status():
 
 if __name__ == "__main__":
     """Check 'cogs' directory for cog files (which are basically bot modules) and load them."""
-    for filename in os.listdir("cogs"):
+    for filename in os.listdir("src/cogs"):
         if filename.endswith("py"):
             POMELO_CLIENT.load_extension(f"cogs.{filename[:-3]}")
 
