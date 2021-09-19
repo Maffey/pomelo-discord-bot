@@ -134,10 +134,10 @@ class Utils(commands.Cog):
         plt.xticks(rotation=90)
         plt.xlabel("Meme names")
         plt.ylabel("Times used")
-        plt.savefig("../data/memes_chart.png", bbox_inches="tight")
+        plt.savefig("data/memes_chart.png", bbox_inches="tight")
         plt.close()
         await ctx.send(
-            "Here's your graph. Enjoy!", file=discord.File("../data/memes_chart.png")
+            "Here's your graph. Enjoy!", file=discord.File("data/memes_chart.png")
         )
 
     @commands.command(
