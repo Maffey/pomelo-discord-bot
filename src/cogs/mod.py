@@ -1,10 +1,16 @@
-import shelve
 import time
+
 import discord
 from discord.ext import commands
 
 from src.main import REQUESTS_COUNTER_FILE
-from src.utilities import insert_meme, get_collection, update_meme, get_meme, delete_meme
+from src.utilities import (
+    insert_meme,
+    get_collection,
+    update_meme,
+    get_meme,
+    delete_meme,
+)
 
 
 class Mod(commands.Cog):

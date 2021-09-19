@@ -1,11 +1,18 @@
 import random
-import shelve
 import re
 
 from discord.ext import commands
 
-from src.utilities import RoughInputException, send_with_buffer, MESSAGE_CHARACTER_LIMIT, handle_dice_roll,\
-    get_memes_as_entries, get_meme, get_collection, update_meme
+from src.utilities import (
+    RoughInputException,
+    send_with_buffer,
+    MESSAGE_CHARACTER_LIMIT,
+    handle_dice_roll,
+    get_memes_as_entries,
+    get_meme,
+    get_collection,
+    update_meme,
+)
 
 
 class Fun(commands.Cog):
@@ -40,7 +47,9 @@ class Fun(commands.Cog):
         if meme is not None:
             await ctx.send(meme["url"])
             # Update number of times this meme was used.
-            update_meme(memes_collection, meme["_id"], "times_used", meme["times_used"] + 1)
+            update_meme(
+                memes_collection, meme["_id"], "times_used", meme["times_used"] + 1
+            )
         else:
             await ctx.send("No such meme exists. You messed up!")
 

@@ -1,6 +1,7 @@
 import os
 import random
 import zipfile
+
 import pymongo
 
 from src.main import MONGODB_CONNECTION_STRING
@@ -33,7 +34,9 @@ def get_meme(memes_collection: pymongo.collection.Collection, meme_name: str) ->
     return meme
 
 
-def update_meme(memes_collection: pymongo.collection.Collection, meme_id, attribute: str, value):
+def update_meme(
+    memes_collection: pymongo.collection.Collection, meme_id, attribute: str, value
+):
     memes_collection.update_one({"_id": meme_id}, {"$set": {attribute: value}})
 
 
@@ -41,12 +44,17 @@ def delete_meme(memes_collection: pymongo.collection.Collection, meme_id):
     memes_collection.delete_one({"_id": meme_id})
 
 
-def insert_meme(memes_collection: pymongo.collection.Collection, meme_name: str, meme_url: str, meme_description: str = "*new meme*"):
+def insert_meme(
+    memes_collection: pymongo.collection.Collection,
+    meme_name: str,
+    meme_url: str,
+    meme_description: str = "*new meme*",
+):
     meme = {
         "name": meme_name,
         "description": meme_description,
         "times_used": 0,
-        "url": meme_url
+        "url": meme_url,
     }
     memes_collection.insert_one(meme)
 

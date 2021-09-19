@@ -1,16 +1,21 @@
-import shelve
-import psutil
-from datetime import datetime
-import googlemaps
-import pandas as pd
 import time
+from datetime import datetime
 
 import discord.file
+import googlemaps
 import matplotlib.pyplot as plt
+import pandas as pd
+import psutil
 from discord.ext import commands
 
 from src.main import GOOGLE_API_TOKEN, REQUESTS_COUNTER_FILE
-from src.utilities import send_with_buffer, backup_to_zip, get_collection, get_meme, get_all_memes
+from src.utilities import (
+    send_with_buffer,
+    backup_to_zip,
+    get_collection,
+    get_meme,
+    get_all_memes,
+)
 
 
 class Utils(commands.Cog):
