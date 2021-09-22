@@ -6,6 +6,7 @@ import googlemaps
 import matplotlib.pyplot as plt
 import pandas as pd
 import psutil
+from bson.errors import InvalidId
 from discord.ext import commands
 
 from src.main import GOOGLE_API_TOKEN, REQUESTS_COUNTER_FILE
@@ -14,7 +15,12 @@ from src.utilities import (
     backup_to_zip,
     get_collection,
     get_meme,
-    get_all_memes, insert_todo, delete_todo, get_todos_as_entries,
+    get_all_memes,
+    insert_todo,
+    delete_todo,
+    get_todos_as_entries,
+    get_api,
+    update_api,
 )
 
 
@@ -64,9 +70,12 @@ class Utils(commands.Cog):
     )
     @commands.is_owner()
     async def del_todo(self, ctx, todo_id):
-        todos_collection = get_collection("todos")
-        delete_todo(todos_collection, todo_id)
-        await ctx.send("The TODO has been deleted.")
+        try:
+            todos_collection = get_collection("todos")
+            delete_todo(todos_collection, todo_id)
+            await ctx.send("The TODO has been deleted.")
+        except InvalidId:
+            await ctx.send("TODO with such ID simply doesn't exist.")
 
     @commands.command(
         aliases=["memedata"],
@@ -151,6 +160,7 @@ class Utils(commands.Cog):
         await ctx.send(
             f"Searching for {searched_place} in {city}, radius: {distance}..."
         )
+        api_provider = "Google"
         # Setup Google Maps API client.
         map_client = googlemaps.Client(GOOGLE_API_TOKEN)
         # Find location data based on search query - in this case: city.
@@ -163,9 +173,10 @@ class Utils(commands.Cog):
         # Convert kilometers to meters
         distance = distance * 1000
 
-        # Read current number of API requests performed into variable.
-        with open(REQUESTS_COUNTER_FILE, "r") as requests_count_file:
-            requests_count = int(requests_count_file.read())
+        # Read current number of API requests already executed into variable.
+        apis_collection = get_collection("apis")
+        api = get_api(apis_collection, api_provider)
+        requests_count = api["number_of_calls"]
 
         # Perform the search.
         response = map_client.places_nearby(
@@ -192,9 +203,8 @@ class Utils(commands.Cog):
             places_list += response.get("results")
             next_page_token = response.get("next_page_token")
 
-        # Save new number of requests to the previous file.
-        with open(REQUESTS_COUNTER_FILE, "w") as requests_count_file:
-            requests_count_file.write(f"{requests_count}\n")
+        # Update document in database.
+        update_api(apis_collection, api_provider, requests_count)
 
         df = pd.DataFrame(places_list)
         # Store Google Maps url with the given place.

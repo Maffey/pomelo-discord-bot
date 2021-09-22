@@ -112,3 +112,5 @@ data_backup.zip
 # Temp plotly file
 temp-plot.html
 
+# Temporary data folder
+data/

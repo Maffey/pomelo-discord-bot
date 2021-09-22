@@ -2,6 +2,7 @@ import time
 
 import discord
 from discord.ext import commands
+from discord.ext.commands import CommandInvokeError
 
 from src.main import REQUESTS_COUNTER_FILE
 from src.utilities import (
@@ -10,6 +11,8 @@ from src.utilities import (
     update_meme,
     get_meme,
     delete_meme,
+    get_api,
+    reset_api,
 )
 
 
@@ -129,12 +132,16 @@ class Mod(commands.Cog):
         description="Print number of Google API requests. Tracked while executing places search.",
     )
     @commands.is_owner()
-    async def print_api(self, ctx):
-        with open(REQUESTS_COUNTER_FILE, "r") as requests_count_file:
-            requests_count = int(requests_count_file.read())
-        await ctx.send(
-            f"Current number of Google API requests executed: **{requests_count}**"
-        )
+    async def print_api(self, ctx, api_provider):
+        try:
+            apis_collection = get_collection("apis")
+            api = get_api(apis_collection, api_provider)
+            requests_count = api["number_of_calls"]
+            await ctx.send(
+                f"Current number of {api_provider} API requests executed: **{requests_count}**"
+            )
+        except TypeError:
+            await ctx.send(f"Such API provider isn't registered in the database.")
 
     @commands.command(
         aliases=["resetapi"],
@@ -142,10 +149,15 @@ class Mod(commands.Cog):
         description="Reset tracked number of Google API requests. Tracked while executing places search.",
     )
     @commands.is_owner()
-    async def reset_api(self, ctx):
-        with open(REQUESTS_COUNTER_FILE, "w") as requests_count_file:
-            requests_count_file.write("0\n")
-        await ctx.send("Number of Google API requests successfully reset to 0.")
+    async def reset_api(self, ctx, api_provider):
+        try:
+            apis_collection = get_collection("apis")
+            reset_api(apis_collection, api_provider)
+            await ctx.send(
+                f"Number of {api_provider} API requests successfully reset to 0."
+            )
+        except TypeError:
+            await ctx.send(f"Such API provider isn't registered in the database.")
 
 
 def setup(client):

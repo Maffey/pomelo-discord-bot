@@ -24,14 +24,35 @@ def get_collection(collection_name: str) -> pymongo.collection.Collection:
     return pomelo_db[collection_name]
 
 
+# APIs functions
+def get_api(apis_collection: pymongo.collection.Collection, api_provider: str) -> dict:
+    api = apis_collection.find_one({"provider": api_provider})
+    return api
+
+
+def update_api(
+    apis_collection: pymongo.collection.Collection,
+    api_provider: str,
+    number_of_calls: int,
+):
+    apis_collection.update_one(
+        {"provider": api_provider}, {"$set": {"number_of_calls": number_of_calls}}
+    )
+
+
+def reset_api(apis_collection: pymongo.collection.Collection, api_provider: str):
+    apis_collection.update_one(
+        {"provider": api_provider}, {"$set": {"number_of_calls": 0}}
+    )
+
+
 # To-do functions
-def insert_todo(todos_collection: pymongo.collection.Collection, timestamp: str, todo_content: str):
+def insert_todo(
+    todos_collection: pymongo.collection.Collection, timestamp: str, todo_content: str
+):
     # Convert date string to Date object.
     timestamp = parser.parse(timestamp)
-    todo = {
-        "timestamp": timestamp,
-        "content": todo_content
-    }
+    todo = {"timestamp": timestamp, "content": todo_content}
     todos_collection.insert_one(todo)
 
 
@@ -91,7 +112,7 @@ def insert_meme(
     memes_collection.insert_one(meme)
 
 
-def get_memes_as_entries(memes_collection) -> list:
+def get_memes_as_entries(memes_collection: pymongo.collection.Collection) -> list:
     """Get all the memes from the database and return it as a printable list of entries."""
     memes = memes_collection.find().sort("name")
     memes_list = []
