@@ -1,6 +1,8 @@
 import os
 import random
 import zipfile
+from dateutil import parser
+from bson.objectid import ObjectId
 
 import pymongo
 
@@ -22,6 +24,36 @@ def get_collection(collection_name: str) -> pymongo.collection.Collection:
     return pomelo_db[collection_name]
 
 
+# To-do functions
+def insert_todo(todos_collection: pymongo.collection.Collection, timestamp: str, todo_content: str):
+    # Convert date string to Date object.
+    timestamp = parser.parse(timestamp)
+    todo = {
+        "timestamp": timestamp,
+        "content": todo_content
+    }
+    todos_collection.insert_one(todo)
+
+
+def delete_todo(todos_collection: pymongo.collection.Collection, todo_id):
+    todos_collection.delete_one({"_id": ObjectId(todo_id)})
+
+
+def get_todos_as_entries(todos_collection) -> list:
+    """Get all the todos from the database and return it as a printable list of entries."""
+    todos = todos_collection.find().sort("timestamp")
+    todo_list = []
+    for item in todos:
+        todo_id = item["_id"]
+        timestamp = item["timestamp"]
+        content = item["content"]
+        meme_entry = f"- ID: {todo_id} - {timestamp} | {content}"
+        todo_list.append(meme_entry)
+
+    return todo_list
+
+
+# Memes functions
 def get_all_memes(memes_collection: pymongo.collection.Collection) -> list:
     """Index all the memes from the shelve database and display a list of memes to the user."""
     memes = memes_collection.find()

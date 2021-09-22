@@ -14,7 +14,7 @@ from src.utilities import (
     backup_to_zip,
     get_collection,
     get_meme,
-    get_all_memes,
+    get_all_memes, insert_todo, delete_todo, get_todos_as_entries,
 )
 
 
@@ -39,17 +39,11 @@ class Utils(commands.Cog):
     )
     @commands.is_owner()
     async def add_todo(self, ctx, *, todo_content):
-        with open("data/todo_list.txt", "a") as todo_file:
-            todo_string = (
-                "# TODO: "
-                + todo_content
-                + " - "
-                + str(datetime.now().strftime("%Y-%m-%d %H:%M"))
-                + "\n"
-            )
-            todo_file.write(todo_string)
+        todos_collection = get_collection("todos")
+        timestamp = str(datetime.now())
+        insert_todo(todos_collection, timestamp, todo_content)
 
-            await ctx.send("The TODO has been added.")
+        await ctx.send("The TODO has been added.")
 
     @commands.command(
         aliases=["todolist"],
@@ -58,43 +52,21 @@ class Utils(commands.Cog):
         "at it...",
     )
     async def todo_list(self, ctx):
-        with open("data/todo_list.txt", "r") as todo_file:
-            await send_with_buffer(ctx, todo_file.readlines())
+        todos_collection = get_collection("todos")
+        todos = get_todos_as_entries(todos_collection)
+        await send_with_buffer(ctx, todos)
 
     @commands.command(
         aliases=["deltodo"],
         brief="Removes a TODO entry",
-        description="Removes given TODO entry from the list of TODO entries by the selected index. "
-        "'0' is the first entry, '1' is the second, etc.",
+        description="Removes given TODO entry from the list of TODO entries by the selected ID. "
+        "Copy the ID from the displayed list (.todo_list command)",
     )
     @commands.is_owner()
-    async def del_todo(self, ctx, line_index):
-        try:
-            line_index = int(line_index)
-        except ValueError:
-            line_index = (
-                -1
-            )  # Return negative line index to indicate an error has occurred.
-
-        if line_index >= 0:
-            with open("data/todo_list.txt", "r") as todo_file:
-                todoes = todo_file.readlines()
-                await ctx.send(
-                    "Deleting line # "
-                    + str(line_index)
-                    + "\nHere's its content:\n```"
-                    + todoes[line_index]
-                    + "```"
-                )
-                del todoes[line_index]
-            with open("data/todo_list.txt", "w") as todo_file:
-                todo_file.writelines(todoes)
-            await ctx.send("The TODO has been deleted.")
-
-        else:
-            await ctx.send(
-                "Yoo, mate! That ain't really a well-suited number, ya know?"
-            )
+    async def del_todo(self, ctx, todo_id):
+        todos_collection = get_collection("todos")
+        delete_todo(todos_collection, todo_id)
+        await ctx.send("The TODO has been deleted.")
 
     @commands.command(
         aliases=["memedata"],
