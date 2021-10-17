@@ -7,3 +7,5 @@ pandas
 pymongo
 dnspython
 python-dateutil
+requests
+bs4

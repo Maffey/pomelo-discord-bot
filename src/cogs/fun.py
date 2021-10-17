@@ -1,5 +1,7 @@
 import random
 import re
+import requests
+import bs4
 
 from discord.ext import commands
 
@@ -134,6 +136,30 @@ class Fun(commands.Cog):
     async def choose(self, ctx, *, list_of_users):
         list_of_users = list_of_users.split()
         await ctx.send(random.choice(list_of_users))
+
+    @commands.command(
+        brief="Check status of the given server",
+        description="Based on the server name provided, check the official website for server status.",
+    )
+    async def status(self, ctx, target_server: str = "Bran"):
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0"}
+        response = requests.get("https://www.newworld.com/en-us/support/server-status", headers=headers)
+        response.raise_for_status()
+        soup = bs4.BeautifulSoup(response.text, "html.parser")
+
+        # Find all entries for all servers
+        server_elements = soup.find_all("div", {"class": "ags-ServerStatus-content-responses-response-server"})
+        for server in server_elements:
+            server_name_element = server.find("div",
+                                              {"class": "ags-ServerStatus-content-responses-response-server-name"})
+            server_name = server_name_element.text.strip()
+            if server_name == target_server:
+                # If name is the same as searched one, get the status.
+                server_wrapper_element = server.find("div", {
+                    "class": "ags-ServerStatus-content-responses-response-server-status-wrapper"})
+                server_status_element = server_wrapper_element.find("div")
+                server_status = server_status_element["title"]
+                await ctx.send(f"Server {server_name} status: **{server_status}**")
 
 
 def setup(client):
