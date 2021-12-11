@@ -85,6 +85,7 @@ async def change_status():
 
 if __name__ == "__main__":
     """Check 'cogs' directory for cog files (which are basically bot modules) and load them."""
+    # If OS is Windows, provide different path for cogs.
     if os.name == "nt":
         cogs_path = os.path.join("cogs")
     else:

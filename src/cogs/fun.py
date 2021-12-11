@@ -2,9 +2,11 @@ import random
 import re
 import requests
 import bs4
+import pyinputplus as pyip
 
 from discord.ext import commands
 
+from src.main import POMELO_CLIENT
 from src.utilities import (
     RoughInputException,
     send_with_buffer,
@@ -142,27 +144,143 @@ class Fun(commands.Cog):
         description="Based on the server name provided, check the official website for server status.",
     )
     async def status(self, ctx, target_server: str = "Bran"):
-        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0"}
-        response = requests.get("https://www.newworld.com/en-us/support/server-status", headers=headers)
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0"
+        }
+        response = requests.get(
+            "https://www.newworld.com/en-us/support/server-status", headers=headers
+        )
         response.raise_for_status()
         soup = bs4.BeautifulSoup(response.text, "html.parser")
 
         # Find all entries for all servers
-        server_elements = soup.find_all("div", {"class": "ags-ServerStatus-content-responses-response-server"})
+        server_elements = soup.find_all(
+            "div", {"class": "ags-ServerStatus-content-responses-response-server"}
+        )
         for server in server_elements:
-            server_name_element = server.find("div",
-                                              {"class": "ags-ServerStatus-content-responses-response-server-name"})
+            server_name_element = server.find(
+                "div",
+                {"class": "ags-ServerStatus-content-responses-response-server-name"},
+            )
             server_name = server_name_element.text.strip()
             if server_name == target_server:
                 # If name is the same as searched one, get the status.
-                server_wrapper_element = server.find("div", {
-                    "class": "ags-ServerStatus-content-responses-response-server-status-wrapper"})
+                server_wrapper_element = server.find(
+                    "div",
+                    {
+                        "class": "ags-ServerStatus-content-responses-response-server-status-wrapper"
+                    },
+                )
                 server_status_element = server_wrapper_element.find("div")
                 server_status = server_status_element["title"]
                 await ctx.send(f"Server {server_name} status: **{server_status}**")
 
-    async def monty_hall_problem(self, ctx, target_server):
-        pass
+    @commands.command(
+        aliases=["mhproblem", "mhp", "montyhallproblem"],
+        brief="Play the game that demonstrates the Monty Hall problem",
+        description="Play the game that demonstrates the Monty Hall problem, where you pick doors and win prizes!",
+    )
+    async def monty_hall_problem(self, ctx):
+        def check(message):
+            return message.author == ctx.author and message.channel == ctx.channel
+
+        prize_name = "CAR"
+        non_prize_name = "GOAT"
+        game_view_template = "[1] [2] [3]"
+
+        game_view = game_view_template
+        possible_rewards = [non_prize_name, non_prize_name, prize_name]
+        # Randomize rewards order
+        random.shuffle(possible_rewards)
+        # Assign rewards to a dictionary where number is the key.
+        rewards_behind_doors = {
+            doors_index + 1: reward
+            for (doors_index, reward) in enumerate(possible_rewards)
+        }
+
+        await ctx.send(
+            "There are three doors. Behind two of them is just a goat. "
+            "But one of the doors hides the prize of this contest: a brand new car!\n"
+            "Which doors will you pick?\n"
+            f"{game_view}"
+        )
+        while True:
+            try:
+                user_selected_door_index = int(
+                    (await self.client.wait_for("message", check=check)).content
+                )
+                if user_selected_door_index < 1 or user_selected_door_index > 3:
+                    raise KeyError
+                else:
+                    break
+            except ValueError:
+                await ctx.send(f"{ctx.message.author} This is not a number.")
+            except KeyError:
+                await ctx.send(f"{ctx.message.author} Number must be between 1 and 3.")
+
+        doors_available_to_reveal = {
+            doors_index: reward
+            for (doors_index, reward) in rewards_behind_doors.items()
+            if reward != prize_name and doors_index != user_selected_door_index
+        }
+        revealed_doors_index = random.choice(list(doors_available_to_reveal))
+
+        game_view = game_view.replace(str(revealed_doors_index), non_prize_name)
+        game_view = game_view.replace(
+            str(user_selected_door_index), f"**{user_selected_door_index}**"
+        )
+
+        await ctx.send(
+            f"You have selected door number [{user_selected_door_index}].\n"
+            f"I will now reveal to you what's behind one of the other doors. "
+            f"Behind doors number [{revealed_doors_index}] there's a goat.\n"
+            f"This means, your current situation in the game looks like this:\n"
+            f"{game_view}\n"
+            f"I marked your choice in bold.\n"
+            f"Now, here's the trick: you are allowed to change door you have selected to the unrevealed "
+            f"one, if you want.\n "
+            f"You don't have to, of course. So, are we changing the doors? [y/N]"
+        )
+
+        does_user_change_doors = (
+            await self.client.wait_for("message", check=check)
+        ).content
+        message_selection_change: str
+        if does_user_change_doors == "y":
+            # TODO There's got to be a more readable way for that.
+            user_selected_door_index = [
+                doors_index
+                for doors_index in rewards_behind_doors.keys()
+                if doors_index != user_selected_door_index
+                and doors_index != revealed_doors_index
+            ][0]
+            message_selection_change = (
+                f"Changing the selected doors to number [{user_selected_door_index}]."
+                f"Good call!"
+            )
+        else:
+            message_selection_change = "You haven't changed your pick.\n"
+
+        message_game_result: str
+        if rewards_behind_doors[user_selected_door_index] == prize_name:
+            message_game_result = f"Congratulations! Your reward is a brand new CAR!"
+        else:
+            message_game_result = (
+                f"Unfortunately you have lost. Your reward is a GOAT :("
+            )
+
+        game_view = game_view_template
+        for door_index, reward in rewards_behind_doors.items():
+            game_view = game_view.replace(str(door_index), f"{door_index}={reward}")
+
+        await ctx.send(
+            f"{message_selection_change}\n{message_game_result}\nHere's what the doors have been hiding from the beginning:\n"
+            f"{game_view}\nIf you have decided to change the doors, even if you have lost - you actually made the correct choice.\n"
+            f"Yes, it might seem weird, but when you change the doors, you actually increase your chance to win.\n"
+            f"It might seem unintuitive, but math is on your side!\n"
+            f"To see more, check out Wikipedia: https://en.wikipedia.org/wiki/Monty_Hall_problem"
+        )
+
 
 def setup(client):
     client.add_cog(Fun(client))
