@@ -207,7 +207,7 @@ class Fun(commands.Cog):
         while True:
             try:
                 user_selected_door_index = int(
-                    (await self.client.wait_for("message", check=check)).content
+                    (await self.client.wait_for("message", check=check, timeout=30)).content
                 )
                 if user_selected_door_index < 1 or user_selected_door_index > 3:
                     raise KeyError
@@ -243,7 +243,7 @@ class Fun(commands.Cog):
         )
 
         does_user_change_doors = (
-            await self.client.wait_for("message", check=check)
+            await self.client.wait_for("message", check=check, timeout=30)
         ).content
         message_selection_change: str
         if does_user_change_doors == "y":
@@ -255,7 +255,7 @@ class Fun(commands.Cog):
                 and doors_index != revealed_doors_index
             ][0]
             message_selection_change = (
-                f"Changing the selected doors to number [{user_selected_door_index}]."
+                f"Changing the selected doors to number [{user_selected_door_index}]. "
                 f"Good call!"
             )
         else:
