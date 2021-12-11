@@ -161,6 +161,8 @@ class Fun(commands.Cog):
                 server_status = server_status_element["title"]
                 await ctx.send(f"Server {server_name} status: **{server_status}**")
 
+    async def monty_hall_problem(self, ctx, target_server):
+        pass
 
 def setup(client):
     client.add_cog(Fun(client))

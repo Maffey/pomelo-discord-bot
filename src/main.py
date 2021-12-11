@@ -85,8 +85,11 @@ async def change_status():
 
 if __name__ == "__main__":
     """Check 'cogs' directory for cog files (which are basically bot modules) and load them."""
-    print(os.getcwd())
-    for filename in os.listdir("src/cogs"):
+    if os.name == "nt":
+        cogs_path = os.path.join("cogs")
+    else:
+        cogs_path = os.path.join("src", "cogs")
+    for filename in os.listdir(cogs_path):
         if filename.endswith("py"):
             POMELO_CLIENT.load_extension(f"cogs.{filename[:-3]}")
 
