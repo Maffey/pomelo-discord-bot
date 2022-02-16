@@ -4,7 +4,7 @@ import requests
 import bs4
 import pyinputplus as pyip
 
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 from src.main import POMELO_CLIENT
 from src.utilities import (
@@ -207,16 +207,20 @@ class Fun(commands.Cog):
         while True:
             try:
                 user_selected_door_index = int(
-                    (await self.client.wait_for("message", check=check, timeout=30)).content
+                    (
+                        await self.client.wait_for("message", check=check, timeout=30)
+                    ).content
                 )
                 if user_selected_door_index < 1 or user_selected_door_index > 3:
                     raise KeyError
                 else:
                     break
             except ValueError:
-                await ctx.send(f"{ctx.message.author} This is not a number.")
+                await ctx.send(f"{ctx.message.author.mention} This is not a number.")
             except KeyError:
-                await ctx.send(f"{ctx.message.author} Number must be between 1 and 3.")
+                await ctx.send(
+                    f"{ctx.message.author.mention} Number must be between 1 and 3."
+                )
 
         doors_available_to_reveal = {
             doors_index: reward
@@ -280,6 +284,25 @@ class Fun(commands.Cog):
             f"It might seem unintuitive, but math is on your side!\n"
             f"To see more, check out Wikipedia: https://en.wikipedia.org/wiki/Monty_Hall_problem"
         )
+
+    @tasks.loop(hours=24)
+    async def change_administrator(self, ctx):
+        # Getting the roles that have administrator set to True
+        admin_roles = [
+            role
+            for role in ctx.guild.roles
+            if role.permissions.administrator and role.name not in ["Pancake", "Pomelo"]
+        ]
+
+        await ctx.send(admin_roles)
+
+    @commands.command(
+        aliases=["startmadness"],
+        brief="Let the chaos begin.",
+        description="Let the chaos begin. Do not use at home.",
+    )
+    async def start_madness(self, ctx):
+        self.change_administrator.start(ctx)
 
 
 def setup(client):
