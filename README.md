@@ -14,7 +14,7 @@ Sassy Discord bot with multiple small functionalities, used mostly for fun and l
 
 Pomelo currently is deployed using Heroku. To deploy it to Heroku, see the relevant guides.
 
-## How to run Pomelo on AWS \[depracated\]
+## How to run Pomelo on AWS \[deprecated\]
 
 In the past, Pomelo was deployed on multiple things, including repl.it and AWS.
 This guide refers to running Pomelo on AWS, although it hadn't been updated in quite a while.
