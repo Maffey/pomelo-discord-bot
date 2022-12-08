@@ -4,8 +4,8 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import CommandInvokeError
 
-from src.main import REQUESTS_COUNTER_FILE
-from src.utilities import (
+from main import REQUESTS_COUNTER_FILE
+from utilities import (
     insert_meme,
     get_collection,
     update_meme,
@@ -160,5 +160,5 @@ class Mod(commands.Cog):
             await ctx.send(f"Such API provider isn't registered in the database.")
 
 
-def setup(client):
-    client.add_cog(Mod(client))
+async def setup(client):
+    await client.add_cog(Mod(client))

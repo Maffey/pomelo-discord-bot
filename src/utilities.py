@@ -6,7 +6,7 @@ from bson.objectid import ObjectId
 
 import pymongo
 
-from src.main import MONGODB_CONNECTION_STRING
+from main import MONGODB_CONNECTION_STRING
 
 # Discord message length limit.
 MESSAGE_CHARACTER_LIMIT = 2000

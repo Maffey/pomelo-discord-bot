@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 import sys
@@ -26,7 +27,8 @@ DEFAULT_PREFIX = "."
 REQUESTS_COUNTER_FILE = "data/google_api_requests.txt"  # todo
 
 # Set the bot client with '.' (dot) as a command prefix.
-POMELO_CLIENT = commands.Bot(command_prefix=DEFAULT_PREFIX)
+# TODO: the hell are intents?
+POMELO_CLIENT = commands.Bot(intents=discord.Intents.all(), command_prefix=DEFAULT_PREFIX)
 
 # Status text to be displayed in bot description.
 STATUS_LIST = cycle(
@@ -83,10 +85,18 @@ async def change_status():
     await POMELO_CLIENT.change_presence(activity=discord.Game(next(STATUS_LIST)))
 
 
-if __name__ == "__main__":
+async def load_extensions():
     """Check 'cogs' directory for cog files (which are basically bot modules) and load them."""
     for filename in os.listdir(os.path.join("src", "cogs")):
-        if filename.endswith("py"):
-            POMELO_CLIENT.load_extension(f"cogs.{filename[:-3]}")
+        if filename.endswith(".py"):
+            await POMELO_CLIENT.load_extension(f"cogs.{filename[:-3]}")
 
-    POMELO_CLIENT.run(DISCORD_BOT_TOKEN)
+async def main():
+    async with POMELO_CLIENT:
+        await load_extensions()
+        await POMELO_CLIENT.start(DISCORD_BOT_TOKEN)
+
+if __name__ == "__main__":
+    # TODO get some kanban board with tasks for pomelo, notion or trello
+    # TODO: add flake8, black, mypy to precommit, hehe
+    asyncio.run(main())

@@ -6,8 +6,8 @@ import pyinputplus as pyip
 
 from discord.ext import commands, tasks
 
-from src.main import POMELO_CLIENT
-from src.utilities import (
+from main import POMELO_CLIENT
+from utilities import (
     RoughInputException,
     send_with_buffer,
     MESSAGE_CHARACTER_LIMIT,
@@ -26,6 +26,7 @@ class Fun(commands.Cog):
     @commands.command(aliases=["8ball"], brief="Standard 8ball game")
     async def _8ball(self, ctx, *, question):
         """Choose a random response from the ones below to respond to user's question."""
+        # TODO: move to data
         with open("8ball_responses.txt", "r") as responses_file:
             responses = responses_file.readlines()
 
@@ -305,5 +306,5 @@ class Fun(commands.Cog):
         self.change_administrator.start(ctx)
 
 
-def setup(client):
-    client.add_cog(Fun(client))
+async def setup(client):
+    await client.add_cog(Fun(client))

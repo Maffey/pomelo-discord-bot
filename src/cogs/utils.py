@@ -9,8 +9,8 @@ import psutil
 from bson.errors import InvalidId
 from discord.ext import commands
 
-from src.main import GOOGLE_API_TOKEN, REQUESTS_COUNTER_FILE
-from src.utilities import (
+from main import GOOGLE_API_TOKEN, REQUESTS_COUNTER_FILE
+from utilities import (
     send_with_buffer,
     backup_to_zip,
     get_collection,
@@ -220,5 +220,5 @@ class Utils(commands.Cog):
         await send_with_buffer(ctx, df_rows, separator="\n\n")
 
 
-def setup(client):
-    client.add_cog(Utils(client))
+async def setup(client):
+    await client.add_cog(Utils(client))
