@@ -26,8 +26,7 @@ class Fun(commands.Cog):
     @commands.command(aliases=["8ball"], brief="Standard 8ball game")
     async def _8ball(self, ctx, *, question):
         """Choose a random response from the ones below to respond to user's question."""
-        # TODO: move to data
-        with open("8ball_responses.txt", "r") as responses_file:
+        with open("data/8ball_responses.txt", "r", encoding="UTF-8") as responses_file:
             responses = responses_file.readlines()
 
         await ctx.send(f"Question was: {question}\nAnswer: {random.choice(responses)}")

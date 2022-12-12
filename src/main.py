@@ -97,6 +97,4 @@ async def main():
         await POMELO_CLIENT.start(DISCORD_BOT_TOKEN)
 
 if __name__ == "__main__":
-    # TODO get some kanban board with tasks for pomelo, notion or trello
-    # TODO: add flake8, black, mypy to precommit, hehe
     asyncio.run(main())

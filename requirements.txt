@@ -1,9 +1,13 @@
+black
 discord.py
 discord
+flake8
 matplotlib
 psutil
 googlemaps
+mypy
 pandas
+pre-commitp
 pymongo
 dnspython
 python-dateutil

@@ -33,3 +33,7 @@ schedule. Here, add the command above and `sudo reboot` to allow for a machine r
 
 To update pomelo enter the folder \pomelo-discord-bot and run `git pull`.
 
+## FAQ
+
+- When executing a command that connects to MongoDB, I get "certificate verify failed: certificate has expired" error. What do I do?
+The Root CA the Mongo Atlas uses has expired. Install ISRG Root X1, ISRG Root X2 and Let's Encrypt R3 certificates from [here](https://letsencrypt.org/certificates/).
