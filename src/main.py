@@ -28,7 +28,9 @@ REQUESTS_COUNTER_FILE = "data/google_api_requests.txt"  # todo
 
 # Set the bot client with '.' (dot) as a command prefix.
 # TODO: the hell are intents?
-POMELO_CLIENT = commands.Bot(intents=discord.Intents.all(), command_prefix=DEFAULT_PREFIX)
+POMELO_CLIENT = commands.Bot(
+    intents=discord.Intents.all(), command_prefix=DEFAULT_PREFIX
+)
 
 # Status text to be displayed in bot description.
 STATUS_LIST = cycle(
@@ -57,21 +59,25 @@ async def on_command_error(ctx, error):
     """If user forgets to put necessary arguments into a command, mock them."""
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send(
-            "You're okay there pal? Because you've _clearly_ missed some of the arguments in your command... "
+            "You're okay there pal? Because you've _clearly_ missed "
+            "some of the arguments in your command... "
             "_shakes head_ Type '.help <command_name> to learn more about command."
         )
     elif isinstance(error, commands.CommandNotFound):
         await ctx.send(
-            "Are you delusional? Such command **doesn't exist** AT ALL. Type '.help' if you are feeling little _stale_."
+            "Are you delusional? Such command **doesn't exist** AT ALL. "
+            "Type '.help' if you are feeling little _stale_."
         )
     elif isinstance(error, commands.MissingPermissions):
         await ctx.send(
-            "You do not have permissions to use such command. Do not try to be tricky with me, kid."
+            "You do not have permissions to use such command. "
+            "Do not try to be tricky with me, kid."
         )
     elif isinstance(error, commands.NotOwner):
         await ctx.send("Only The Creator Himself can call such spells on me.")
 
-    # All other Exceptions not returned come here and the default traceback is then printed.
+    # All other Exceptions not returned come here
+    # and the default traceback is then printed.
     print(f"Ignoring exception in command {ctx.command}:", file=sys.stderr)
     traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
@@ -86,15 +92,18 @@ async def change_status():
 
 
 async def load_extensions():
-    """Check 'cogs' directory for cog files (which are basically bot modules) and load them."""
+    """Check 'cogs' directory for cog files (which are basically bot modules) "
+    "and load them."""
     for filename in os.listdir(os.path.join("src", "cogs")):
         if filename.endswith(".py"):
             await POMELO_CLIENT.load_extension(f"cogs.{filename[:-3]}")
+
 
 async def main():
     async with POMELO_CLIENT:
         await load_extensions()
         await POMELO_CLIENT.start(DISCORD_BOT_TOKEN)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

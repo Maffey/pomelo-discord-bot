@@ -61,7 +61,8 @@ def delete_todo(todos_collection: pymongo.collection.Collection, todo_id):
 
 
 def get_todos_as_entries(todos_collection) -> list:
-    """Get all the todos from the database and return it as a printable list of entries."""
+    """Get all the todos from the database and return it "
+    "as a printable list of entries."""
     todos = todos_collection.find().sort("timestamp")
     todo_list = []
     for item in todos:
@@ -76,7 +77,8 @@ def get_todos_as_entries(todos_collection) -> list:
 
 # Memes functions
 def get_all_memes(memes_collection: pymongo.collection.Collection) -> list:
-    """Index all the memes from the shelve database and display a list of memes to the user."""
+    """Index all the memes from the shelve database "
+    "and display a list of memes to the user."""
     memes = memes_collection.find()
     return memes
 
@@ -113,7 +115,8 @@ def insert_meme(
 
 
 def get_memes_as_entries(memes_collection: pymongo.collection.Collection) -> list:
-    """Get all the memes from the database and return it as a printable list of entries."""
+    """Get all the memes from the database "
+    "and return it as a printable list of entries."""
     memes = memes_collection.find().sort("name")
     memes_list = []
     for item in memes:
@@ -134,7 +137,8 @@ async def send_with_buffer(
     for index, entry in enumerate(message_entries):
         # Ensure 'entry' is a string so it can be concatenated.
         entry = str(entry)
-        # When the buffer exceeds max character limit, dump the contents of the buffer into the message.
+        # When the buffer exceeds max character limit,
+        # dump the contents of the buffer into the message.
         if (
             len(
                 message_block_indicator
@@ -169,7 +173,8 @@ async def handle_dice_roll(dice_roll: str, ctx) -> tuple:
     if number_of_throws == 0:
         await ctx.send("Yeah. Zero throws. Very funny.")
     else:
-        # Calculate the result for throwing dice given amount of times. '_' means the variable is not used.
+        # Calculate the result for throwing dice given amount of times.
+        # '_' means the variable is not used.
         dice_throws = [random.randint(1, dice_sides) for _ in range(number_of_throws)]
         return str(sum(dice_throws)), dice_throws
 

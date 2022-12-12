@@ -9,7 +9,7 @@ import psutil
 from bson.errors import InvalidId
 from discord.ext import commands
 
-from main import GOOGLE_API_TOKEN, REQUESTS_COUNTER_FILE
+from main import GOOGLE_API_TOKEN
 from utilities import (
     send_with_buffer,
     backup_to_zip,
@@ -37,11 +37,13 @@ class Utils(commands.Cog):
     @commands.command(
         aliases=["addtodo"],
         brief="Adds a TODO entry to the TODO list",
-        description="Adds a TODO to the list of things that will probably never be done. I hate myself. "
+        description="Adds a TODO to the list of things that will "
+        "probably never be done. I hate myself. "
         "Life is suffering. The endless oblivion of things that should be done will "
-        "eventually catch up with us all, causing devastation, chaos and misery. You really "
-        "want to contribute to it? That 'one additional thing we have to do' which you will "
-        "NEVER do? Think twice before adding anything, please.",
+        "eventually catch up with us all, causing devastation, chaos and misery. "
+        'You really want to contribute to it? That "one additional thing '
+        'we have to do" which you will NEVER do? '
+        "Think twice before adding anything, please.",
     )
     @commands.is_owner()
     async def add_todo(self, ctx, *, todo_content):
@@ -54,7 +56,8 @@ class Utils(commands.Cog):
     @commands.command(
         aliases=["todolist"],
         brief="Shows the TODO list",
-        description="Shows the TODO list. I mean, if we have the list already, might as well take a look "
+        description="Shows the TODO list. I mean, if we have the list already, "
+        "might as well take a look "
         "at it...",
     )
     async def todo_list(self, ctx):
@@ -65,7 +68,8 @@ class Utils(commands.Cog):
     @commands.command(
         aliases=["deltodo"],
         brief="Removes a TODO entry",
-        description="Removes given TODO entry from the list of TODO entries by the selected ID. "
+        description="Removes given TODO entry from the list of TODO entries "
+        "by the selected ID. "
         "Copy the ID from the displayed list (.todo_list command)",
     )
     @commands.is_owner()
@@ -80,7 +84,8 @@ class Utils(commands.Cog):
     @commands.command(
         aliases=["memedata"],
         brief="Shows dictionary data about a meme",
-        description="Shows dictionary data about a meme, taken directly from the meme database, "
+        description="Shows dictionary data about a meme, "
+        "taken directly from the meme database, "
         "such as the direct link to the image, "
         "description or how many times the meme was used.",
     )
@@ -128,7 +133,8 @@ class Utils(commands.Cog):
 
     @commands.command(
         brief="Creates a backup of 'data' directory",
-        description="Creates a backup of 'data' directory which contains mutable data such as "
+        description="Creates a backup of 'data' directory "
+        "which contains mutable data such as "
         "meme database, TODO list, etc..",
     )
     @commands.is_owner()
@@ -154,7 +160,8 @@ class Utils(commands.Cog):
     @commands.command(
         aliases=["sp"],
         brief="Search nearby places",
-        description="Search nearby places using Google Maps API. Requires search query, city and distance in km.",
+        description="Search nearby places using Google Maps API. "
+        "Requires search query, city and distance in km.",
     )
     async def search_places(self, ctx, searched_place, city, distance=10):
         await ctx.send(

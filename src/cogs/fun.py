@@ -2,11 +2,9 @@ import random
 import re
 import requests
 import bs4
-import pyinputplus as pyip
 
 from discord.ext import commands, tasks
 
-from main import POMELO_CLIENT
 from utilities import (
     RoughInputException,
     send_with_buffer,
@@ -25,7 +23,8 @@ class Fun(commands.Cog):
 
     @commands.command(aliases=["8ball"], brief="Standard 8ball game")
     async def _8ball(self, ctx, *, question):
-        """Choose a random response from the ones below to respond to user's question."""
+        """Choose a random response from the ones below
+        to respond to user's question."""
         with open("data/8ball_responses.txt", "r", encoding="UTF-8") as responses_file:
             responses = responses_file.readlines()
 
@@ -33,10 +32,12 @@ class Fun(commands.Cog):
 
     @commands.command(
         brief="Sends a desired meme to the chat",
-        description="Sends a desired meme to the chat. Type 'help' to get a list of all memes.",
+        description="Sends a desired meme to the chat. "
+        "Type 'help' to get a list of all memes.",
     )
     async def meme(self, ctx, *, meme_name):
-        """Send a meme the user wants to be sent by pasting a hyperlink from shelve database."""
+        """Send a meme the user wants to be sent
+        by pasting a hyperlink from shelve database."""
         # Get meme collection
         memes_collection = get_collection("memes")
 
@@ -76,7 +77,8 @@ class Fun(commands.Cog):
         aliases=["r"],
         brief="Rolls dice",
         description="Rolls dices based on XdY formula, "
-        "where X is a number of dices to be rolled and Y is a number of sides on the dice.",
+        "where X is a number of dices to be rolled "
+        "and Y is a number of sides on the dice.",
     )
     async def roll(self, ctx, *, throw_sequence):
         # Define a regex to find all elements and find them.
@@ -87,7 +89,8 @@ class Fun(commands.Cog):
         try:
             # Convert dice rolls to calculated throw values.
             for index, element in enumerate(throw_sequence):
-                # If the substring in throw_sequence has a character 'd' in it, that means it's a dice roll.
+                # If the substring in throw_sequence has a character 'd' in it,
+                # that means it's a dice roll.
                 if "d" in element:
                     # Handle the dice roll And return the result here.
                     dice_result, dices_list = await handle_dice_roll(element, ctx)
@@ -103,7 +106,8 @@ class Fun(commands.Cog):
 
             # Join sequence with spaces for readability.
             throw_sequence_print = " ".join(throw_sequence_print)
-            # After handling the dices, evaluate the throw_sequence as Python expression to easily calculate result.
+            # After handling the dices,evaluate the throw_sequence
+            # as Python expression to easily calculate result.
             total_result_value = eval("".join(throw_sequence))
             # Store message to send into a variable.
             message_to_send = (
@@ -120,19 +124,22 @@ class Fun(commands.Cog):
         except (ValueError, SyntaxError):
             await ctx.send(
                 "It can't be *that* hard to properly form a dice roll, can it?"
-                "Just type sequence of dices, operators and number separated by space, for example: "
+                "Just type sequence of dices, "
+                "operators and number separated by space, for example: "
                 "`5 + 3d8 - 5d6 + 4`. I believe in you."
             )
 
         except RoughInputException:
             await ctx.send(
-                f"{ctx.message.author.mention} Oi! Mate, those numbers of yours - they are way too much!"
+                f"{ctx.message.author.mention} Oi! Mate, "
+                "those numbers of yours - they are way too much!"
                 f"Keep it simple!"
             )
 
     @commands.command(
         brief="Chooses one user from given users",
-        description="Chooses one user and mentions them from the list of users provided in the command, "
+        description="Chooses one user and mentions them "
+        "from the list of users provided in the command, "
         "separated by spaces.",
     )
     async def choose(self, ctx, *, list_of_users):
@@ -141,11 +148,13 @@ class Fun(commands.Cog):
 
     @commands.command(
         brief="Check status of the given server",
-        description="Based on the server name provided, check the official website for server status.",
+        description="Based on the server name provided, "
+        "check the official website for server status.",
     )
     async def status(self, ctx, target_server: str = "Bran"):
         headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) "
+            "Gecko/20100101 Firefox/92.0"
         }
         response = requests.get(
             "https://www.newworld.com/en-us/support/server-status", headers=headers
@@ -168,7 +177,8 @@ class Fun(commands.Cog):
                 server_wrapper_element = server.find(
                     "div",
                     {
-                        "class": "ags-ServerStatus-content-responses-response-server-status-wrapper"
+                        "class": "ags-ServerStatus"
+                        "-content-responses-response-server-status-wrapper"
                     },
                 )
                 server_status_element = server_wrapper_element.find("div")
@@ -178,7 +188,8 @@ class Fun(commands.Cog):
     @commands.command(
         aliases=["mhproblem", "mhp", "montyhallproblem"],
         brief="Play the game that demonstrates the Monty Hall problem",
-        description="Play the game that demonstrates the Monty Hall problem, where you pick doors and win prizes!",
+        description="Play the game that demonstrates the Monty Hall problem, "
+        "where you pick doors and win prizes!",
     )
     async def monty_hall_problem(self, ctx):
         def check(message):
@@ -241,7 +252,8 @@ class Fun(commands.Cog):
             f"This means, your current situation in the game looks like this:\n"
             f"{game_view}\n"
             f"I marked your choice in bold.\n"
-            f"Now, here's the trick: you are allowed to change door you have selected to the unrevealed "
+            f"Now, here's the trick: "
+            "you are allowed to change door you have selected to the unrevealed "
             f"one, if you want.\n "
             f"You don't have to, of course. So, are we changing the doors? [y/N]"
         )
@@ -267,10 +279,10 @@ class Fun(commands.Cog):
 
         message_game_result: str
         if rewards_behind_doors[user_selected_door_index] == prize_name:
-            message_game_result = f"Congratulations! Your reward is a brand new CAR!"
+            message_game_result = "Congratulations! Your reward is a brand new CAR!"
         else:
             message_game_result = (
-                f"Unfortunately you have lost. Your reward is a GOAT :("
+                "Unfortunately you have lost. Your reward is a GOAT :("
             )
 
         game_view = game_view_template
@@ -278,11 +290,15 @@ class Fun(commands.Cog):
             game_view = game_view.replace(str(door_index), f"{door_index}={reward}")
 
         await ctx.send(
-            f"{message_selection_change}\n{message_game_result}\nHere's what the doors have been hiding from the beginning:\n"
-            f"{game_view}\nIf you have decided to change the doors, even if you have lost - you actually made the correct choice.\n"
-            f"Yes, it might seem weird, but when you change the doors, you actually increase your chance to win.\n"
+            f"{message_selection_change}\n{message_game_result}\n"
+            "Here's what the doors have been hiding from the beginning:\n"
+            f"{game_view}\nIf you have decided to change the doors, "
+            "even if you have lost - you actually made the correct choice.\n"
+            f"Yes, it might seem weird, but when you change the doors, "
+            "you actually increase your chance to win.\n"
             f"It might seem unintuitive, but math is on your side!\n"
-            f"To see more, check out Wikipedia: https://en.wikipedia.org/wiki/Monty_Hall_problem"
+            f"To see more, check out Wikipedia: "
+            "https://en.wikipedia.org/wiki/Monty_Hall_problem"
         )
 
     @tasks.loop(hours=24)

@@ -112,8 +112,8 @@ data_backup.zip
 # Temp plotly file
 temp-plot.html
 
-# Data folder
-data/
+# Target folder
+target/
 
 # VS Code configuration directory
 .vscode

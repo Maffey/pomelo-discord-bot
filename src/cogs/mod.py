@@ -2,9 +2,7 @@ import time
 
 import discord
 from discord.ext import commands
-from discord.ext.commands import CommandInvokeError
 
-from main import REQUESTS_COUNTER_FILE
 from utilities import (
     insert_meme,
     get_collection,
@@ -25,7 +23,8 @@ class Mod(commands.Cog):
     async def clear(self, ctx, amount=3):
         amount += 2
         await ctx.send(
-            "**SNAP**\nhttps://media1.tenor.com/images/e36fb32cfc3b63075adf0f1843fdc43a/tenor.gif?itemid=12502580"
+            "**SNAP**\nhttps://media1.tenor.com/"
+            "images/e36fb32cfc3b63075adf0f1843fdc43a/tenor.gif?itemid=12502580"
         )
         time.sleep(1.8)
         await ctx.channel.purge(limit=amount)
@@ -121,7 +120,8 @@ class Mod(commands.Cog):
         if meme is not None:
             update_meme(memes_collection, meme["_id"], "description", description)
             await ctx.send(
-                f"The description of | **{meme_name}** | has been changed to _'{description}'_."
+                f"The description of | **{meme_name}** | "
+                "has been changed to _'{description}'_."
             )
         else:
             await ctx.send("No such meme exists. You messed up!")
@@ -129,7 +129,8 @@ class Mod(commands.Cog):
     @commands.command(
         aliases=["printapi"],
         brief="Print number of API requests",
-        description="Print number of Google API requests. Tracked while executing places search.",
+        description="Print number of Google API requests. "
+        "Tracked while executing places search.",
     )
     @commands.is_owner()
     async def print_api(self, ctx, api_provider):
@@ -138,15 +139,17 @@ class Mod(commands.Cog):
             api = get_api(apis_collection, api_provider)
             requests_count = api["number_of_calls"]
             await ctx.send(
-                f"Current number of {api_provider} API requests executed: **{requests_count}**"
+                f"Current number of {api_provider} "
+                f"API requests executed: **{requests_count}**"
             )
         except TypeError:
-            await ctx.send(f"Such API provider isn't registered in the database.")
+            await ctx.send("Such API provider isn't registered in the database.")
 
     @commands.command(
         aliases=["resetapi"],
         brief="Reset tracked number of API requests",
-        description="Reset tracked number of Google API requests. Tracked while executing places search.",
+        description="Reset tracked number of Google API requests. "
+        "Tracked while executing places search.",
     )
     @commands.is_owner()
     async def reset_api(self, ctx, api_provider):
@@ -157,7 +160,7 @@ class Mod(commands.Cog):
                 f"Number of {api_provider} API requests successfully reset to 0."
             )
         except TypeError:
-            await ctx.send(f"Such API provider isn't registered in the database.")
+            await ctx.send("Such API provider isn't registered in the database.")
 
 
 async def setup(client):
