@@ -5,12 +5,11 @@ flake8
 matplotlib
 psutil
 googlemaps
-mypy
 pandas
-pre-commitp
+pre-commit
 pymongo
 dnspython
+poetry
 python-dateutil
 requests
 bs4
-pyinputplus
