@@ -192,7 +192,7 @@ class Fun(commands.Cog):
         "where you pick doors and win prizes!",
     )
     async def monty_hall_problem(self, ctx):
-        def check(message):
+        def _check(message):
             return message.author == ctx.author and message.channel == ctx.channel
 
         prize_name = "CAR"
@@ -219,7 +219,7 @@ class Fun(commands.Cog):
             try:
                 user_selected_door_index = int(
                     (
-                        await self.client.wait_for("message", check=check, timeout=30)
+                        await self.client.wait_for("message", check=_check, timeout=30)
                     ).content
                 )
                 if user_selected_door_index < 1 or user_selected_door_index > 3:
@@ -259,7 +259,7 @@ class Fun(commands.Cog):
         )
 
         does_user_change_doors = (
-            await self.client.wait_for("message", check=check, timeout=30)
+            await self.client.wait_for("message", check=_check, timeout=30)
         ).content
         message_selection_change: str
         if does_user_change_doors == "y":
