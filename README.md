@@ -1,39 +1,30 @@
 # Pomelo Discord Bot
 
-Sassy Discord bot with multiple small functionalities, used mostly for fun and learning.
+Discord bot for fun. Ripe, fresh and juicy.
 
-# How to run Pomelo
+# How to run Pomelo locally
 
 1. Clone the repository.
-2. Set the working directory as the root directory of the repository (/pomelo-discord-bot by default).
+2. Set the working directory as the root directory of the repository (`/pomelo-discord-bot` by default).
 3. Get the necessary API tokens and set them up as environmental variables:
-   1. Discord bot token
-   2. Google Maps API token
-   3. MongoDB's connection token (full identifier)
-4. Run main.py. You're done!
-
-Pomelo currently is deployed using Heroku. To deploy it to Heroku, see the relevant guides.
-
-## How to run Pomelo on AWS \[deprecated\]
-
-In the past, Pomelo was deployed on multiple things, including repl.it and AWS.
-This guide refers to running Pomelo on AWS, although it hadn't been updated in quite a while.
-
-Connect to AWS server via your key (encrypts the password) using shell. if you type `ls` you will get all files listed
-on the server. Enter the folder with the *pomelo-discord-bot* and enter following command:
-`nohup python3 main.py &`
-nohup - runs given piece of software in the background, by attaching it to virtual terminal. python3 - indicates which
-language you want to use to run the script. main.py - file to execute. & - opens file in background, doesn't show
-output (like nohup)
-
-To stop pomelo enter `ps -aux` (shows active processes) then `kill [process_number]`
-
-Crontab allows us to automate some tasks, in this case daily. Enter `crontab -e` to see what processes run at what
-schedule. Here, add the command above and `sudo reboot` to allow for a machine restart every day.
-
-To update pomelo enter the folder \pomelo-discord-bot and run `git pull`.
+   - Discord bot token
+   - Google Maps API token
+   - MongoDB's connection token (full identifier)
+4. Execute `poetry install`.
+5. Run the script by executing `poetry run pyton src/main.py`.
 
 ## FAQ
 
 - When executing a command that connects to MongoDB, I get "certificate verify failed: certificate has expired" error. What do I do?
 The Root CA the Mongo Atlas uses has expired. Install ISRG Root X1, ISRG Root X2 and Let's Encrypt R3 certificates from [here](https://letsencrypt.org/certificates/).
+- How could I run Pomelo from AWS?
+Ahh, those were the days. Use [crontab](https://man7.org/linux/man-pages/man5/crontab.5.html) together with [nohup](https://en.wikipedia.org/wiki/Nohup). You should find a relevant, thorough guide somewhere.
+
+## History of Pomelo the Traveler
+
+List of hosting services Pomelo used, in chronological order:
+1. Localhost (sic!)
+2. replit.com (I'm not even joking)
+3. AWS (my wallet still hurts)
+4. Heroku (it was wonderful)
+5. fly.io (?)
