@@ -15,10 +15,10 @@ Discord bot for fun. Ripe, fresh and juicy.
 
 ## FAQ
 
-- When executing a command that connects to MongoDB, I get "certificate verify failed: certificate has expired" error. What do I do?
-The Root CA the Mongo Atlas uses has expired. Install ISRG Root X1, ISRG Root X2 and Let's Encrypt R3 certificates from [here](https://letsencrypt.org/certificates/).
-- How could I run Pomelo from AWS?
-Ahh, those were the days. Use [crontab](https://man7.org/linux/man-pages/man5/crontab.5.html) together with [nohup](https://en.wikipedia.org/wiki/Nohup). You should find a relevant, thorough guide somewhere.
+- When executing a command that connects to MongoDB, I get "certificate verify failed: certificate has expired" error. What do I do?  
+The Root CA the Mongo Atlas uses has expired. Install ISRG Root X1, ISRG Root X2 and Let's Encrypt R3 certificates from [here](https://letsencrypt.org/certificates/).  
+- How could I run Pomelo from AWS?  
+Ahh, those were the days. Use [crontab](https://man7.org/linux/man-pages/man5/crontab.5.html) together with [nohup](https://en.wikipedia.org/wiki/Nohup). You should find a relevant, thorough guide somewhere.  
 
 ## History of Pomelo the Traveler
 
