@@ -78,7 +78,7 @@ async def on_command_error(ctx, error):
 
     # All other Exceptions not returned come here
     # and the default traceback is then printed.
-    print(f"Ignoring exception in command {ctx.command}:", file=sys.stderr)
+    print(f"Ignoring exception in command {ctx.command}: ", file=sys.stderr)
     traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
 
@@ -106,4 +106,7 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("[HALT] Shutting down manually.")

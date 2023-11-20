@@ -11,7 +11,7 @@ Discord bot for fun. Ripe, fresh and juicy.
    - Google Maps API token
    - MongoDB's connection token (full identifier)
 4. Execute `poetry install`.
-5. Run the script by executing `poetry run pyton src/main.py`.
+5. Run the script by executing `poetry run python src/main.py`.
 
 ## FAQ
 
